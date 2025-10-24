@@ -4,7 +4,8 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Card, CardContent } from '@/components/ui/card'
 import { Lead } from './KanbanBoard'
-import { Building2, Mail, Phone } from 'lucide-react'
+import { Building2, Mail, Phone, Clock } from 'lucide-react'
+import { formatRelativeTime } from '@/lib/utils'
 
 interface LeadCardProps {
   lead: Lead
@@ -28,6 +29,14 @@ export function LeadCard({ lead, onClick, isDragging }: LeadCardProps) {
     opacity: isSortableDragging ? 0.5 : 1,
   }
 
+  // Handle click with delay to differentiate from drag
+  const handleClick = (e: React.MouseEvent) => {
+    // Only trigger on single click, not during drag
+    if (!isSortableDragging) {
+      onClick()
+    }
+  }
+
   return (
     <Card
       ref={setNodeRef}
@@ -37,12 +46,7 @@ export function LeadCard({ lead, onClick, isDragging }: LeadCardProps) {
       className={`cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow ${
         isDragging ? 'shadow-lg rotate-3' : ''
       }`}
-      onClick={(e) => {
-        if (e.detail === 2) {
-          // Double click
-          onClick()
-        }
-      }}
+      onClick={handleClick}
     >
       <CardContent className="p-3 space-y-2">
         <div className="font-semibold text-sm truncate">{lead.name}</div>
@@ -64,13 +68,19 @@ export function LeadCard({ lead, onClick, isDragging }: LeadCardProps) {
             <span className="truncate">{lead.phone}</span>
           </div>
         )}
-        {lead.source && (
-          <div className="mt-2">
+        <div className="flex items-center justify-between gap-2 mt-2">
+          {lead.source && (
             <span className="inline-block px-2 py-0.5 text-xs rounded-full bg-secondary text-secondary-foreground">
               {lead.source}
             </span>
+          )}
+          <div className="flex items-center gap-1 text-xs text-muted-foreground ml-auto">
+            <Clock className="h-3 w-3" />
+            <span title={new Date(lead.created_at).toLocaleString()}>
+              {formatRelativeTime(lead.created_at)}
+            </span>
           </div>
-        )}
+        </div>
       </CardContent>
     </Card>
   )

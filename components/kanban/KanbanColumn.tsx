@@ -13,20 +13,20 @@ interface KanbanColumnProps {
   onLeadClick: (leadId: string) => void
 }
 
-export function KanbanColumn({ id, title, leads, onLeadClick }: KanbanColumnProps) {
+export function KanbanColumn({ id, title, leads = [], onLeadClick }: KanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id })
 
   return (
     <Card
       ref={setNodeRef}
-      className={`flex flex-col h-[calc(100vh-250px)] transition-colors ${
+      className={`flex flex-col h-[400px] lg:h-[calc(100vh-250px)] min-w-[300px] flex-shrink-0 lg:min-w-0 lg:flex-shrink transition-colors ${
         isOver ? 'border-primary' : ''
       }`}
     >
       <CardHeader className="pb-3">
         <CardTitle className="text-sm font-medium flex items-center justify-between">
           <span>{title}</span>
-          <span className="text-muted-foreground">({leads.length})</span>
+          <span className="text-muted-foreground">({leads?.length || 0})</span>
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 overflow-y-auto space-y-2 p-3 pt-0">

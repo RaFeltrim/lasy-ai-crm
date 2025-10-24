@@ -1,0 +1,45 @@
+# Code Owners for Lasy CRM
+# 
+# These owners will be automatically requested for review when
+# someone opens a pull request that modifies code in specific areas.
+#
+# Based on André Girol's Code Review principles - ensuring the right
+# people review the right code.
+
+# Default owners for everything in the repo
+* @RaFeltrim
+
+# Documentation
+/Crm-Documentation/ @RaFeltrim
+*.md @RaFeltrim
+
+# Frontend Components
+/components/ @RaFeltrim
+/app/ @RaFeltrim
+
+# API Routes
+/app/api/ @RaFeltrim
+
+# Database & Migrations
+/supabase/ @RaFeltrim
+/lib/supabase-*.ts @RaFeltrim
+
+# Tests
+/__tests__/ @RaFeltrim
+/tests/ @RaFeltrim
+/playwright/ @RaFeltrim
+*.test.ts @RaFeltrim
+*.test.tsx @RaFeltrim
+*.spec.ts @RaFeltrim
+
+# Configuration
+/package.json @RaFeltrim
+/tsconfig.json @RaFeltrim
+/next.config.js @RaFeltrim
+/.github/ @RaFeltrim
+
+# CI/CD
+/.github/workflows/ @RaFeltrim
+
+# Validation & Schemas
+/lib/zod-schemas.ts @RaFeltrim

@@ -95,6 +95,16 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('Error creating lead:', error)
+      
+      // Check if it's a schema cache issue
+      if (error.message.includes('schema cache') || error.message.includes('column')) {
+        return NextResponse.json({ 
+          error: 'Database schema error. Please reload the schema in Supabase.',
+          details: error.message,
+          solution: 'Run: NOTIFY pgrst, \'reload schema\'; in Supabase SQL Editor'
+        }, { status: 500 })
+      }
+      
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 

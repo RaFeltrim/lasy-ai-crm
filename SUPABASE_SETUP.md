@@ -24,6 +24,12 @@ Copy and paste the contents of `supabase/migrations/0002_fix_missing_source_colu
 
 This ensures the source column exists and is properly indexed.
 
+### Migration 3: Fix Notes Column (IMPORTANT)
+
+Copy and paste the contents of `supabase/migrations/0003_fix_notes_column.sql` and click **Run**.
+
+This ensures the notes column is recognized by PostgREST and fixes the schema cache issue.
+
 ## Step 2: Create a Test User
 
 1. Go to **Authentication** > **Users** in Supabase dashboard

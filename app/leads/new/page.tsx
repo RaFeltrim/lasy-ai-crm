@@ -4,10 +4,10 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import InputMask from 'react-input-mask'
 import { LeadCreateSchema, type LeadCreate } from '@/lib/zod-schemas'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { PhoneInput } from '@/components/ui/phone-input'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -22,7 +22,13 @@ export default function NewLeadPage() {
   const form = useForm<LeadCreate>({
     resolver: zodResolver(LeadCreateSchema),
     defaultValues: {
+      name: '',
+      email: '',
+      phone: '',
+      company: '',
       status: 'new',
+      source: '',
+      notes: '',
     },
   })
 
@@ -52,15 +58,17 @@ export default function NewLeadPage() {
       toast({
         title: 'Success',
         description: 'Lead created successfully!',
+        duration: 3000,
       })
 
       router.push('/dashboard')
       router.refresh()
     } catch (error: any) {
       toast({
-        title: 'Error',
-        description: error.message || 'Failed to create lead',
+        title: 'Error creating lead',
+        description: error.message || 'Failed to create lead. Please check your input and try again.',
         variant: 'destructive',
+        duration: 10000, // 10 seconds for errors
       })
     } finally {
       setLoading(false)
@@ -105,7 +113,7 @@ export default function NewLeadPage() {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input type="email" placeholder="john@example.com" {...field} value={field.value || ''} />
+                        <Input type="email" placeholder="john@example.com" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -119,20 +127,12 @@ export default function NewLeadPage() {
                     <FormItem>
                       <FormLabel>Phone</FormLabel>
                       <FormControl>
-                        <InputMask
-                          mask="+99 (99) 99999-9999"
-                          value={field.value || ''}
-                          onChange={field.onChange}
+                        <PhoneInput
+                          placeholder="+55 (19) 99999-9999"
+                          value={field.value}
+                          onAccept={field.onChange}
                           onBlur={field.onBlur}
-                        >
-                          {(inputProps: any) => (
-                            <Input
-                              {...inputProps}
-                              type="tel"
-                              placeholder="+55 (19) 99999-9999"
-                            />
-                          )}
-                        </InputMask>
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -146,7 +146,7 @@ export default function NewLeadPage() {
                     <FormItem>
                       <FormLabel>Company</FormLabel>
                       <FormControl>
-                        <Input placeholder="Acme Corp" {...field} value={field.value || ''} />
+                        <Input placeholder="Acme Corp" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -185,7 +185,7 @@ export default function NewLeadPage() {
                     <FormItem>
                       <FormLabel>Source</FormLabel>
                       <FormControl>
-                        <Input placeholder="website, referral, etc." {...field} value={field.value || ''} />
+                        <Input placeholder="website, referral, etc." {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -199,7 +199,7 @@ export default function NewLeadPage() {
                     <FormItem>
                       <FormLabel>Notes</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="Additional notes..." rows={4} {...field} value={field.value || ''} />
+                        <Textarea placeholder="Additional notes..." rows={4} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

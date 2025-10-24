@@ -18,15 +18,25 @@ export const LeadCreateSchema = z.object({
     .optional()
     .transform((v) => v || undefined),
   phone: z
-    .string()
-    .trim()
-    .regex(
-      /^(\+?\d{1,3}[\s-]?)?\(?\d{1,4}\)?[\s-]?\d{1,5}[\s-]?\d{1,5}$/,
-      'Invalid phone format. Use numbers, spaces, dashes, or parentheses only'
-    )
-    .or(z.literal(''))
+    .union([
+      z.string().trim().refine(
+        (val) => {
+          // Accept any string that has at least some digits
+          // Very permissive - just check if it has numbers
+          const hasDigits = /\d/.test(val)
+          return hasDigits || val === ''
+        },
+        'Invalid phone format. Phone must contain at least one digit'
+      ),
+      z.literal(''),
+      z.null(),
+      z.undefined(),
+    ])
     .optional()
-    .transform((v) => v || undefined),
+    .transform((v) => {
+      if (v === null || v === undefined || v === '') return undefined
+      return v
+    }),
   company: z.string().trim().optional(),
   status: LeadStatusEnum.optional().default('new'),
   notes: z.string().trim().optional(),

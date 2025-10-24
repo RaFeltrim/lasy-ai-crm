@@ -72,6 +72,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
+  if (request.nextUrl.pathname === '/signup' && user) {
+    return NextResponse.redirect(new URL('/dashboard', request.url))
+  }
+
   if (request.nextUrl.pathname === '/' && user) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
   }
@@ -84,5 +88,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/login', '/dashboard/:path*', '/leads/:path*'],
+  matcher: ['/', '/login', '/signup', '/dashboard/:path*', '/leads/:path*'],
 }

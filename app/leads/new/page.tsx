@@ -31,14 +31,21 @@ export default function NewLeadPage() {
     setLoading(true)
 
     try {
+      // Ensure status is lowercase to match DB enum constraint
+      const leadData = {
+        ...data,
+        status: data.status ? data.status.toLowerCase() : 'new',
+      }
+
       const response = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify(leadData),
       })
 
       if (!response.ok) {
-        throw new Error('Failed to create lead')
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to create lead')
       }
 
       toast({
@@ -48,10 +55,10 @@ export default function NewLeadPage() {
 
       router.push('/dashboard')
       router.refresh()
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: 'Error',
-        description: 'Failed to create lead',
+        description: error.message || 'Failed to create lead',
         variant: 'destructive',
       })
     } finally {
@@ -122,7 +129,7 @@ export default function NewLeadPage() {
                 <Label htmlFor="status">Status</Label>
                 <Select
                   value={statusValue}
-                  onValueChange={(value) => setValue('status', value as any)}
+                  onValueChange={(value) => setValue('status', value.toLowerCase() as any)}
                 >
                   <SelectTrigger>
                     <SelectValue />

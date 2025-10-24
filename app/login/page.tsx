@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase-client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -32,23 +33,25 @@ export default function LoginPage() {
           description: error.message,
           variant: 'destructive',
         })
+        setLoading(false)
         return
       }
 
-      toast({
-        title: 'Success',
-        description: 'Logged in successfully!',
-      })
+      if (data?.user) {
+        toast({
+          title: 'Success',
+          description: 'Logged in successfully!',
+        })
 
-      router.push('/dashboard')
-      router.refresh()
+        // Force navigation with window.location for reliable redirect
+        window.location.href = '/dashboard'
+      }
     } catch (error) {
       toast({
         title: 'Error',
         description: 'An unexpected error occurred',
         variant: 'destructive',
       })
-    } finally {
       setLoading(false)
     }
   }
@@ -61,6 +64,9 @@ export default function LoginPage() {
           <CardDescription className="text-center">
             Enter your credentials to access your account
           </CardDescription>
+          <p className="text-xs text-muted-foreground text-center mt-2">
+            Don't have an account? Create one in Supabase Dashboard
+          </p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
@@ -91,6 +97,12 @@ export default function LoginPage() {
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'Loading...' : 'Entrar'}
             </Button>
+            <div className="text-center text-sm">
+              <span className="text-muted-foreground">Don't have an account? </span>
+              <Link href="/signup" className="text-primary hover:underline">
+                Create account
+              </Link>
+            </div>
           </form>
         </CardContent>
       </Card>

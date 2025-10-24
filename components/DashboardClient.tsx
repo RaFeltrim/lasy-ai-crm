@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase-client'
 import { KanbanBoard, Lead } from '@/components/kanban/KanbanBoard'
 import { FiltersBar } from '@/components/leads/FiltersBar'
@@ -17,8 +17,14 @@ interface DashboardClientProps {
 
 export function DashboardClient({ initialLeads }: DashboardClientProps) {
   const [leads, setLeads] = useState<Lead[]>(initialLeads)
+  const [mounted, setMounted] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
   const supabase = createClient()
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleStatusChange = async (leadId: string, newStatus: LeadStatus) => {
     const previousLeads = leads
@@ -73,13 +79,15 @@ export function DashboardClient({ initialLeads }: DashboardClientProps) {
   }
 
   const handleExportCSV = () => {
-    const params = new URLSearchParams(window.location.search)
-    window.location.href = `/api/leads/export.csv?${params.toString()}`
+    if (!mounted) return
+    const queryString = searchParams.toString()
+    window.location.href = `/api/leads/export.csv${queryString ? `?${queryString}` : ''}`
   }
 
   const handleExportXLSX = () => {
-    const params = new URLSearchParams(window.location.search)
-    window.location.href = `/api/leads/export.xlsx?${params.toString()}`
+    if (!mounted) return
+    const queryString = searchParams.toString()
+    window.location.href = `/api/leads/export.xlsx${queryString ? `?${queryString}` : ''}`
   }
 
   const handleLogout = async () => {

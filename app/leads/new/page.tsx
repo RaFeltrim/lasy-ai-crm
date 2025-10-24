@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import InputMask from 'react-input-mask'
 import { LeadCreateSchema, type LeadCreate } from '@/lib/zod-schemas'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -18,12 +19,14 @@ export default function NewLeadPage() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
-  const { handleSubmit, control, formState: { errors, isSubmitting } } = useForm<LeadCreate>({
+  const form = useForm<LeadCreate>({
     resolver: zodResolver(LeadCreateSchema),
     defaultValues: {
       status: 'new',
     },
   })
+
+  const { handleSubmit, control, formState: { isSubmitting } } = form
 
   const onSubmit = async (data: LeadCreate) => {
     setLoading(true)
@@ -79,7 +82,7 @@ export default function NewLeadPage() {
             <CardTitle>Lead Information</CardTitle>
           </CardHeader>
           <CardContent>
-            <Form {...{ handleSubmit, control, formState: { errors, isSubmitting } }}>
+            <Form {...form}>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <FormField
                   control={control}
@@ -116,7 +119,20 @@ export default function NewLeadPage() {
                     <FormItem>
                       <FormLabel>Phone</FormLabel>
                       <FormControl>
-                        <Input placeholder="+1-555-0100" {...field} value={field.value || ''} />
+                        <InputMask
+                          mask="+99 (99) 99999-9999"
+                          value={field.value || ''}
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                        >
+                          {(inputProps: any) => (
+                            <Input
+                              {...inputProps}
+                              type="tel"
+                              placeholder="+55 (19) 99999-9999"
+                            />
+                          )}
+                        </InputMask>
                       </FormControl>
                       <FormMessage />
                     </FormItem>

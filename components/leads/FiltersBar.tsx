@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -10,23 +11,39 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { X } from 'lucide-react'
 
 export function FiltersBar() {
+  const [isClient, setIsClient] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
 
   const { register, handleSubmit, setValue, watch, reset } = useForm<LeadFilter>({
     resolver: zodResolver(LeadFilterSchema),
     defaultValues: {
-      query: searchParams.get('query') || '',
-      status: (searchParams.get('status') as LeadStatus) || undefined,
-      source: searchParams.get('source') || '',
-      from: searchParams.get('from') || '',
-      to: searchParams.get('to') || '',
+      query: '',
+      status: undefined,
+      source: '',
+      from: '',
+      to: '',
     },
   })
 
   const statusValue = watch('status')
 
+  // Sync form with URL params only on client
+  useEffect(() => {
+    setIsClient(true)
+    
+    const query = searchParams.get('query') || ''
+    const status = (searchParams.get('status') as LeadStatus) || undefined
+    const source = searchParams.get('source') || ''
+    const from = searchParams.get('from') || ''
+    const to = searchParams.get('to') || ''
+
+    reset({ query, status, source, from, to })
+  }, [searchParams, reset])
+
   const onSubmit = (data: LeadFilter) => {
+    if (!isClient) return
+    
     const params = new URLSearchParams()
     
     if (data.query) params.set('query', data.query)
@@ -40,6 +57,8 @@ export function FiltersBar() {
   }
 
   const handleClear = () => {
+    if (!isClient) return
+    
     reset({
       query: '',
       status: undefined,
@@ -51,19 +70,20 @@ export function FiltersBar() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" suppressHydrationWarning>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
         <Input
-          placeholder="Search by name..."
+          placeholder="Search by name, email, company, or notes..."
           {...register('query')}
-          className="lg:col-span-2"
+          className="sm:col-span-2 lg:col-span-2"
+          suppressHydrationWarning
         />
 
         <Select
           value={statusValue || ''}
           onValueChange={(value) => setValue('status', value as LeadStatus)}
         >
-          <SelectTrigger>
+          <SelectTrigger suppressHydrationWarning>
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -75,16 +95,16 @@ export function FiltersBar() {
           </SelectContent>
         </Select>
 
-        <Input placeholder="Source" {...register('source')} />
+        <Input placeholder="Source" {...register('source')} suppressHydrationWarning />
 
-        <Input type="date" placeholder="From" {...register('from')} />
+        <Input type="date" placeholder="From" {...register('from')} suppressHydrationWarning />
 
-        <Input type="date" placeholder="To" {...register('to')} />
+        <Input type="date" placeholder="To" {...register('to')} suppressHydrationWarning />
       </div>
 
-      <div className="flex gap-2">
-        <Button type="submit">Search</Button>
-        <Button type="button" variant="outline" onClick={handleClear}>
+      <div className="flex flex-col sm:flex-row gap-2">
+        <Button type="submit" className="w-full sm:w-auto">Search</Button>
+        <Button type="button" variant="outline" onClick={handleClear} className="w-full sm:w-auto">
           <X className="h-4 w-4 mr-2" />
           Clear
         </Button>

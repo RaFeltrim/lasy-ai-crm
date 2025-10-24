@@ -36,9 +36,9 @@ interface KanbanBoardProps {
 
 const columns: { id: LeadStatus; title: string }[] = [
   { id: 'new', title: 'New' },
+  { id: 'contacted', title: 'Contacted' },
   { id: 'qualified', title: 'Qualified' },
-  { id: 'proposal', title: 'Proposal' },
-  { id: 'won', title: 'Won' },
+  { id: 'pending', title: 'Pending' },
   { id: 'lost', title: 'Lost' },
 ]
 
@@ -55,9 +55,9 @@ export function KanbanBoard({ leads, onStatusChange, onLeadClick }: KanbanBoardP
   const leadsByStatus = useMemo(() => {
     const grouped: Record<LeadStatus, Lead[]> = {
       new: [],
+      contacted: [],
       qualified: [],
-      proposal: [],
-      won: [],
+      pending: [],
       lost: [],
     }
 

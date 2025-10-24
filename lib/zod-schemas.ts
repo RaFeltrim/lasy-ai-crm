@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 // Lead status enum (lowercase to match DB)
-export const LeadStatusEnum = z.enum(['new', 'qualified', 'proposal', 'won', 'lost'])
+export const LeadStatusEnum = z.enum(['new', 'contacted', 'qualified', 'pending', 'lost'])
 export type LeadStatus = z.infer<typeof LeadStatusEnum>
 
 // Interaction type enum

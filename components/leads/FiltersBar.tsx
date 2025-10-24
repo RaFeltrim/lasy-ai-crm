@@ -68,9 +68,9 @@ export function FiltersBar() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="new">New</SelectItem>
+            <SelectItem value="contacted">Contacted</SelectItem>
             <SelectItem value="qualified">Qualified</SelectItem>
-            <SelectItem value="proposal">Proposal</SelectItem>
-            <SelectItem value="won">Won</SelectItem>
+            <SelectItem value="pending">Pending</SelectItem>
             <SelectItem value="lost">Lost</SelectItem>
           </SelectContent>
         </Select>

@@ -5,7 +5,7 @@ A modern, full-stack Customer Relationship Management (CRM) system built with Ne
 ## 🚀 Features
 
 - **Authentication**: Secure user authentication with Supabase Auth
-- **Kanban Pipeline**: Drag-and-drop interface for managing leads across different stages
+- **Kanban Pipeline**: Drag-and-drop interface for managing leads across 5 stages (New → Contacted → Qualified → Pending → Lost)
 - **Lead Management**: Full CRUD operations for leads with detailed information
 - **Advanced Filtering**: Search and filter leads by name, status, source, and date range
 - **Import/Export**: Bulk import leads from CSV/XLSX and export data in multiple formats

@@ -30,6 +30,12 @@ Copy and paste the contents of `supabase/migrations/0003_fix_notes_column.sql` a
 
 This ensures the notes column is recognized by PostgREST and fixes the schema cache issue.
 
+### Migration 4: Update Lead Status Values
+
+Copy and paste the contents of `supabase/migrations/0004_update_lead_status_values.sql` and click **Run**.
+
+This updates the lead status constraint to use the new values: 'new', 'contacted', 'qualified', 'pending', 'lost'.
+
 ## Step 2: Create a Test User
 
 1. Go to **Authentication** > **Users** in Supabase dashboard

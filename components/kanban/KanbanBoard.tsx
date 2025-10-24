@@ -101,7 +101,7 @@ export function KanbanBoard({ leads, onStatusChange, onLeadClick }: KanbanBoardP
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="flex flex-col gap-4 md:flex-row md:grid md:grid-cols-3 lg:grid-cols-5">
         {columns.map((column) => (
           <KanbanColumn
             key={column.id}

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase-client'
 import { KanbanBoard, Lead } from '@/components/kanban/KanbanBoard'
 import { FiltersBar } from '@/components/leads/FiltersBar'
@@ -17,14 +17,13 @@ interface DashboardClientProps {
 
 export function DashboardClient({ initialLeads }: DashboardClientProps) {
   const [leads, setLeads] = useState<Lead[]>(initialLeads)
-  const [mounted, setMounted] = useState(false)
   const router = useRouter()
-  const searchParams = useSearchParams()
   const supabase = createClient()
 
+  // Update leads when initialLeads changes (e.g., after filter)
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setLeads(initialLeads)
+  }, [initialLeads])
 
   const handleStatusChange = async (leadId: string, newStatus: LeadStatus) => {
     const previousLeads = leads
@@ -60,6 +59,7 @@ export function DashboardClient({ initialLeads }: DashboardClientProps) {
       toast({
         title: 'Success',
         description: 'Lead status updated',
+        duration: 3000,
       })
     } catch (error: any) {
       // Revert optimistic update
@@ -70,6 +70,7 @@ export function DashboardClient({ initialLeads }: DashboardClientProps) {
         title: 'Error',
         description: error.message || 'Failed to update lead status',
         variant: 'destructive',
+        duration: 10000, // 10 seconds for errors
       })
     }
   }
@@ -79,15 +80,11 @@ export function DashboardClient({ initialLeads }: DashboardClientProps) {
   }
 
   const handleExportCSV = () => {
-    if (!mounted) return
-    const queryString = searchParams.toString()
-    window.location.href = `/api/leads/export.csv${queryString ? `?${queryString}` : ''}`
+    window.location.href = `/api/leads/export.csv${window.location.search}`
   }
 
   const handleExportXLSX = () => {
-    if (!mounted) return
-    const queryString = searchParams.toString()
-    window.location.href = `/api/leads/export.xlsx${queryString ? `?${queryString}` : ''}`
+    window.location.href = `/api/leads/export.xlsx${window.location.search}`
   }
 
   const handleLogout = async () => {
@@ -100,28 +97,28 @@ export function DashboardClient({ initialLeads }: DashboardClientProps) {
     <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-[1800px] mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Lasy CRM</h1>
-            <p className="text-muted-foreground">Manage your leads pipeline</p>
+            <h1 className="text-2xl sm:text-3xl font-bold">Lasy CRM</h1>
+            <p className="text-sm text-muted-foreground">Manage your leads pipeline</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={() => router.push('/leads/new')}>
-              <Plus className="h-4 w-4 mr-2" />
-              New Lead
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" size="sm" onClick={() => router.push('/leads/new')} className="flex-1 sm:flex-none">
+              <Plus className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">New Lead</span>
             </Button>
             <ImportLeadsDialog />
             <Button variant="outline" size="sm" onClick={handleExportCSV}>
-              <Download className="h-4 w-4 mr-2" />
-              CSV
+              <Download className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">CSV</span>
             </Button>
             <Button variant="outline" size="sm" onClick={handleExportXLSX}>
-              <Download className="h-4 w-4 mr-2" />
-              XLSX
+              <Download className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">XLSX</span>
             </Button>
             <Button variant="outline" size="sm" onClick={handleLogout}>
-              <LogOut className="h-4 w-4 mr-2" />
-              Logout
+              <LogOut className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Logout</span>
             </Button>
           </div>
         </div>

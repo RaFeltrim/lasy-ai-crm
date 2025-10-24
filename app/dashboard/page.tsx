@@ -24,7 +24,9 @@ export default async function DashboardPage({
     .order('created_at', { ascending: false })
 
   if (searchParams.query && typeof searchParams.query === 'string') {
-    query = query.ilike('name', `%${searchParams.query}%`)
+    // Global search across multiple fields
+    const searchTerm = `%${searchParams.query}%`
+    query = query.or(`name.ilike.${searchTerm},email.ilike.${searchTerm},company.ilike.${searchTerm},notes.ilike.${searchTerm}`)
   }
 
   if (searchParams.status && typeof searchParams.status === 'string') {

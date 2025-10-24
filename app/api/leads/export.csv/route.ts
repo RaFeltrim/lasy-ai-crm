@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    // Prepare data for CSV
+    // Prepare data for CSV (exclude auto-generated fields like created_at, updated_at, id, user_id)
     const csvData = leads.map((lead) => ({
       name: sanitizeCSVValue(lead.name || ''),
       email: sanitizeCSVValue(lead.email || ''),
@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
       company: sanitizeCSVValue(lead.company || ''),
       status: lead.status || '',
       source: sanitizeCSVValue(lead.source || ''),
-      created_at: lead.created_at || '',
+      notes: sanitizeCSVValue(lead.notes || ''),
     }))
 
     const csv = Papa.unparse(csvData)

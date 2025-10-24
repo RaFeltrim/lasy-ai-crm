@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    // Prepare data for Excel
+    // Prepare data for Excel (exclude auto-generated fields like created_at, updated_at, id, user_id)
     const excelData = leads.map((lead) => ({
       Name: lead.name || '',
       Email: lead.email || '',
@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
       Company: lead.company || '',
       Status: lead.status || '',
       Source: lead.source || '',
-      'Created At': lead.created_at || '',
+      Notes: lead.notes || '',
     }))
 
     const worksheet = XLSX.utils.json_to_sheet(excelData)

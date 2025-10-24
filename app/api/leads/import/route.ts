@@ -5,6 +5,15 @@ import { NextRequest, NextResponse } from 'next/server'
 import Papa from 'papaparse'
 import * as XLSX from 'xlsx'
 
+// Helper function to clean phone number format
+function cleanPhoneNumber(phone: string | undefined | null): string | undefined {
+  if (!phone) return undefined
+  // Keep only digits, +, -, spaces, and parentheses
+  const cleaned = phone.toString().trim()
+  if (!cleaned) return undefined
+  return cleaned
+}
+
 export async function POST(request: NextRequest) {
   try {
     const supabase = createClient()
@@ -47,6 +56,8 @@ export async function POST(request: NextRequest) {
 
     const results = {
       inserted: 0,
+      updated: 0,
+      skipped: 0,
       rejected: 0,
       errors: [] as any[],
     }
@@ -80,34 +91,78 @@ export async function POST(request: NextRequest) {
           }
         })
 
-        // Sanitize CSV injection
+        // Sanitize CSV injection and normalize empty values
         if (leadData.name) leadData.name = sanitizeCSVValue(leadData.name)
         if (leadData.email) leadData.email = sanitizeCSVValue(leadData.email)
-        if (leadData.phone) leadData.phone = sanitizeCSVValue(leadData.phone)
+        
+        // Special handling for phone - convert null/empty/undefined to undefined
+        if (leadData.phone !== undefined) {
+          const sanitized = sanitizeCSVValue(leadData.phone)
+          leadData.phone = cleanPhoneNumber(sanitized)
+        } else {
+          leadData.phone = undefined // Explicitly set to undefined if not present
+        }
+        
         if (leadData.company) leadData.company = sanitizeCSVValue(leadData.company)
         if (leadData.source) leadData.source = sanitizeCSVValue(leadData.source)
 
         // Validate with Zod
         const validatedData = LeadCreateSchema.parse(leadData)
 
-        // Insert into database
-        const { error } = await supabase.from('leads').insert([
-          {
-            ...validatedData,
-            status: (validatedData.status || 'new').toLowerCase(),
-            user_id: user.id,
-          },
-        ])
+        // Check for duplicates based on email (if email exists)
+        let existingLead = null
+        if (validatedData.email) {
+          const { data } = await supabase
+            .from('leads')
+            .select('id')
+            .eq('user_id', user.id)
+            .eq('email', validatedData.email)
+            .single()
+          
+          existingLead = data
+        }
 
-        if (error) {
-          results.rejected++
-          results.errors.push({
-            row: i + 1,
-            data: row,
-            error: error.message,
-          })
+        if (existingLead) {
+          // Update existing lead
+          const { error } = await supabase
+            .from('leads')
+            .update({
+              ...validatedData,
+              status: (validatedData.status || 'new').toLowerCase(),
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', existingLead.id)
+
+          if (error) {
+            results.rejected++
+            results.errors.push({
+              row: i + 1,
+              data: row,
+              error: error.message,
+            })
+          } else {
+            results.updated++
+          }
         } else {
-          results.inserted++
+          // Insert new lead
+          const { error } = await supabase.from('leads').insert([
+            {
+              ...validatedData,
+              status: (validatedData.status || 'new').toLowerCase(),
+              user_id: user.id,
+            },
+          ])
+
+          if (error) {
+            results.rejected++
+            results.errors.push({
+              row: i + 1,
+              data: row,
+              error: error.message,
+            })
+          } else {
+            results.inserted++
+          }
         }
       } catch (error: any) {
         results.rejected++

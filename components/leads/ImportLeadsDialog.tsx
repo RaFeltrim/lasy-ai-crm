@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Upload } from 'lucide-react'
+import { Upload, FileUp } from 'lucide-react'
 import { toast } from '@/components/ui/use-toast'
 import { useRouter } from 'next/navigation'
 
@@ -65,14 +65,40 @@ export function ImportLeadsDialog() {
         throw new Error(result.error || 'Import failed')
       }
 
-      toast({
-        title: 'Import successful!',
-        description: `${result.inserted} leads imported. ${result.rejected} rejected.`,
-      })
+      // Check if any leads were actually imported
+      if (result.inserted === 0 && result.updated === 0 && result.rejected > 0) {
+        // Show errors if available
+        const errorDetails = result.errors && result.errors.length > 0
+          ? `\n\nFirst error: ${JSON.stringify(result.errors[0], null, 2)}`
+          : ''
+        
+        toast({  
+          title: 'Import completed with errors',
+          description: `${result.rejected} leads rejected.${errorDetails}`,
+          variant: 'destructive',
+          duration: 10000, // 10 seconds for error messages
+        })
+      } else {
+        const parts = []
+        if (result.inserted > 0) parts.push(`${result.inserted} new`)
+        if (result.updated > 0) parts.push(`${result.updated} updated`)
+        if (result.rejected > 0) parts.push(`${result.rejected} rejected`)
+        
+        toast({  
+          title: 'Import successful!',
+          description: `Leads: ${parts.join(', ')}.`,
+          duration: 5000,
+        })
+      }
 
       setOpen(false)
       setFile(null)
+      
+      // Force hard refresh to show imported leads
       router.refresh()
+      setTimeout(() => {
+        window.location.reload()
+      }, 500)
     } catch (error: any) {
       toast({
         title: 'Import failed',
@@ -96,22 +122,35 @@ export function ImportLeadsDialog() {
         <DialogHeader>
           <DialogTitle>Import Leads</DialogTitle>
           <DialogDescription>
-            Upload a CSV or XLSX file to import leads. The file should contain columns: name, email, phone, company, status, source.
+            Upload a CSV or XLSX file to import leads. Duplicate leads (same email) will be updated instead of creating duplicates.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="space-y-2">
             <Label htmlFor="file">Select File</Label>
-            <Input
-              id="file"
-              type="file"
-              accept=".csv,.xlsx,.xls"
-              onChange={handleFileChange}
-              disabled={loading}
-            />
+            <div className="flex items-center gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => document.getElementById('file')?.click()}
+                disabled={loading}
+                className="w-full justify-start h-auto py-3"
+              >
+                <FileUp className="h-5 w-5 mr-2" />
+                {file ? file.name : 'Choose file (CSV or XLSX)'}
+              </Button>
+              <Input
+                id="file"
+                type="file"
+                accept=".csv,.xlsx,.xls"
+                onChange={handleFileChange}
+                disabled={loading}
+                className="hidden"
+              />
+            </div>
             {file && (
-              <p className="text-sm text-muted-foreground">
-                Selected: {file.name}
+              <p className="text-xs text-muted-foreground">
+                ✓ File ready to import
               </p>
             )}
           </div>

@@ -1,6 +1,11 @@
 import { createClient } from '@/lib/supabase-server'
-import { DashboardClient } from '@/components/DashboardClient'
+import dynamic from 'next/dynamic'
 import { redirect } from 'next/navigation'
+
+const DashboardClient = dynamic(
+  () => import('@/components/DashboardClient').then(mod => ({ default: mod.DashboardClient })),
+  { ssr: false }
+)
 
 export default async function DashboardPage({
   searchParams,

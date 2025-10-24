@@ -17,13 +17,35 @@ interface DashboardClientProps {
 
 export function DashboardClient({ initialLeads }: DashboardClientProps) {
   const [leads, setLeads] = useState<Lead[]>(initialLeads)
+  const [isClient, setIsClient] = useState(false)
   const router = useRouter()
   const supabase = createClient()
+
+  // Handle hydration
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   // Update leads when initialLeads changes (e.g., after filter)
   useEffect(() => {
     setLeads(initialLeads)
   }, [initialLeads])
+
+  // Prevent hydration mismatch
+  if (!isClient) {
+    return (
+      <div className="min-h-screen bg-background p-4 md:p-8">
+        <div className="max-w-[1800px] mx-auto space-y-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold">Lasy CRM</h1>
+              <p className="text-sm text-muted-foreground">Manage your leads pipeline</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   const handleStatusChange = async (leadId: string, newStatus: LeadStatus) => {
     const previousLeads = leads
@@ -94,8 +116,8 @@ export function DashboardClient({ initialLeads }: DashboardClientProps) {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-8">
-      <div className="max-w-[1800px] mx-auto space-y-6">
+    <div className="min-h-screen bg-background p-4 md:p-8" suppressHydrationWarning>
+      <div className="max-w-[1800px] mx-auto space-y-6" suppressHydrationWarning>
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>

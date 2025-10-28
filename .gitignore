@@ -38,3 +38,22 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Arquivos temporários do Windows
+Thumbs.db
+$null
+ehthumbs.db
+
+# Diretórios acidentais de PowerShell
+-Force/
+
+# Arquivos temporários de PR
+PR_*.md
+CHECKLIST_*.md
+
+# Arquivos de autenticação do Playwright
+playwright/.auth/
+!playwright/.auth/.gitkeep
+
+# Logs adicionais
+*.log

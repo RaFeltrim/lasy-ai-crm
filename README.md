@@ -37,8 +37,8 @@ A modern, full-stack Customer Relationship Management (CRM) system built with Ne
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/RaFeltrim/Nova-pasta.git
-   cd Nova-pasta
+   git clone https://github.com/RaFeltrim/lasy-ai-crm.git
+   cd lasy-ai-crm
    ```
 
 2. **Install dependencies**
@@ -50,15 +50,24 @@ A modern, full-stack Customer Relationship Management (CRM) system built with Ne
    
    Create a `.env.local` file in the root directory:
    ```env
-   NEXT_PUBLIC_SUPABASE_URL=https://qxbgltpxqhuhzyjfbcdp.supabase.co
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4YmdsdHB4cWh1aHp5amZiY2RwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDc3MDM3MSwiZXhwIjoyMDc2MzQ2MzcxfQ.MIpiv8UrBTtba3pJXlxVLbqRCeD4SuMYGb3DwOjWA5U
+   NEXT_PUBLIC_SUPABASE_URL=your-project-url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
    ```
+   
+   Get these values from your Supabase project:
+   - Go to [Supabase Dashboard](https://supabase.com/dashboard)
+   - Select your project
+   - Navigate to **Settings** → **API**
+   - Copy the **Project URL** and **anon public** key
 
 4. **Run database migrations**
    
-   Execute the SQL files in `supabase/migrations/` in your Supabase SQL editor:
+   Execute the SQL files in `supabase/migrations/` in your Supabase SQL editor (in order):
    - `0001_initial_schema.sql`
    - `0002_fix_missing_source_column.sql`
+   - `0003_fix_notes_column.sql`
+   - `0004_update_lead_status_values.sql`
+   - `0005_ensure_updated_at_column.sql`
 
 5. **Run the development server**
    ```bash
@@ -95,33 +104,54 @@ npm run build
 npm run start
 ```
 
+## 🚀 Deploy to Netlify
+
+This project is configured for deployment on Netlify:
+
+1. **Connect your repository** to Netlify
+2. **Configure build settings**:
+   - Build command: `npm run build`
+   - Publish directory: `.next`
+3. **Add environment variables** in Netlify:
+   - Go to **Site settings** → **Build & deploy** → **Environment variables**
+   - Add `NEXT_PUBLIC_SUPABASE_URL`
+   - Add `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+4. **Deploy**: Netlify will automatically deploy on every push to master
+
+The app uses Next.js Runtime for Netlify and dynamic routes are configured to prevent static generation errors.
+
 ## 📁 Project Structure
 
 ```
 ├── app/
-│   ├── (app)/
-│   │   └── dashboard/          # Main dashboard with Kanban
 │   ├── api/
 │   │   └── leads/             # API routes for leads, interactions, import/export
-│   ├── login/                  # Authentication page
+│   │       ├── [id]/          # Individual lead operations
+│   │       ├── import/        # CSV/XLSX import
+│   │       ├── export.csv/    # CSV export (dynamic route)
+│   │       └── export.xlsx/   # XLSX export (dynamic route)
+│   ├── dashboard/             # Main dashboard with Kanban board
+│   ├── login/                 # Login page (client component)
+│   ├── signup/                # Signup page (client component)
 │   └── leads/
-│       ├── new/                # Create new lead
-│       └── [id]/               # Lead details page
+│       ├── new/               # Create new lead
+│       └── [id]/              # Lead details page
 ├── components/
-│   ├── ui/                     # shadcn/ui components
-│   ├── kanban/                 # Kanban board components
-│   └── leads/                  # Lead-specific components
+│   ├── ui/                    # shadcn/ui components
+│   ├── kanban/                # Kanban board components
+│   └── leads/                 # Lead-specific components
 ├── lib/
-│   ├── supabase-server.ts     # Supabase server client
-│   ├── supabase-client.ts     # Supabase browser client
-│   ├── zod-schemas.ts         # Zod validation schemas
-│   └── utils.ts               # Utility functions
+│   ├── supabase-server.ts    # Supabase server client (SSR)
+│   ├── supabase-client.ts    # Supabase browser client
+│   ├── zod-schemas.ts        # Zod validation schemas
+│   └── utils.ts              # Utility functions
 ├── supabase/
-│   ├── migrations/            # Database migrations
-│   └── seed.sql               # Sample data
-├── tests/                      # Vitest unit tests
-├── playwright/                 # Playwright E2E tests
-└── middleware.ts              # Auth middleware for route protection
+│   ├── migrations/           # Database migrations (SQL)
+│   └── seed.sql              # Sample data
+├── tests/                     # Vitest unit tests
+├── playwright/                # Playwright E2E tests
+├── Crm-Documentation/         # Comprehensive project documentation
+└── middleware.ts             # Auth middleware for route protection
 ```
 
 ## 🔐 Authentication
@@ -161,6 +191,15 @@ All tables have RLS enabled. Users can only access their own data (`user_id` col
 ## 🎨 UI Components
 
 The project uses shadcn/ui components with a dark theme. All components are fully typed and accessible.
+
+## 🔒 Security Notes
+
+**IMPORTANT**: Never commit your `.env.local` file or expose your Supabase keys publicly!
+
+- The `.env.local` file is already in `.gitignore`
+- Use only the **anon public** key in your environment variables
+- Never use the **service_role** key in client-side code
+- For production, set environment variables in your hosting platform (Netlify, Vercel, etc.)
 
 ## 🐛 Troubleshooting
 

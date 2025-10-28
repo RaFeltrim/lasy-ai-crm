@@ -259,6 +259,8 @@ MIT
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
+Please read our [Code of Conduct](.github/CODE_OF_CONDUCT.md) before contributing.
+
 ## 📧 Contact
 
 For questions or support, please open an issue on GitHub.

@@ -2,6 +2,9 @@ import { createClient } from '@/lib/supabase-server'
 import { LeadUpdateSchema } from '@/lib/zod-schemas'
 import { NextRequest, NextResponse } from 'next/server'
 
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }

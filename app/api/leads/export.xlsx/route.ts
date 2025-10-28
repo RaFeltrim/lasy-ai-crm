@@ -3,6 +3,9 @@ import { LeadFilterSchema } from '@/lib/zod-schemas'
 import { NextRequest, NextResponse } from 'next/server'
 import * as XLSX from 'xlsx'
 
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 export async function GET(request: NextRequest) {
   try {
     const supabase = createClient()

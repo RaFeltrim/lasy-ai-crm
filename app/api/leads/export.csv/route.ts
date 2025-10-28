@@ -4,6 +4,9 @@ import { sanitizeCSVValue } from '@/lib/utils'
 import { NextRequest, NextResponse } from 'next/server'
 import Papa from 'papaparse'
 
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 export async function GET(request: NextRequest) {
   try {
     const supabase = createClient()

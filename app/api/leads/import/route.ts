@@ -5,6 +5,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import Papa from 'papaparse'
 import * as XLSX from 'xlsx'
 
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 // Helper function to clean phone number format
 function cleanPhoneNumber(phone: string | undefined | null): string | undefined {
   if (!phone) return undefined

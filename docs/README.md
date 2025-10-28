@@ -6,7 +6,7 @@ Bem-vindo à documentação completa do Lasy CRM. Esta pasta contém toda a docu
 
 ### Guias de Configuração
 
-- [Setup do Supabase](../SUPABASE_SETUP.md) - Configuração do banco de dados e autenticação
+- [Setup do Supabase](guia/SUPABASE_SETUP.md) - Configuração do banco de dados e autenticação
 - [Autenticação](guia/AUTHENTICATION.md) - Sistema de autenticação e fluxos de login
 
 ### Documentação Completa do CRM
@@ -33,18 +33,14 @@ Veja [crm-documentation/README.md](crm-documentation/README.md) para o índice c
 ### Notas Técnicas e Fixes
 
 - [Fix de Drag & Drop](notes/DRAG_DROP_FIX.md) - Correção do sistema de arrastar e soltar
-- [Fix de Hydration](../HYDRATION_FIX_FINAL.md) - Solução para erros de hidratação do React
+- [Fix de Hydration](notes/HYDRATION_FIX_FINAL.md) - Solução para erros de hidratação do React
 - [Fix de StrictMode](notes/STRICTMODE_FIX.md) - Ajustes para compatibilidade com StrictMode
-- [Fix de Notes Error](../FIX_NOTES_ERROR.md) - Correção de erros no sistema de notas
+- [Fix de Notes Error](notes/FIX_NOTES_ERROR.md) - Correção de erros no sistema de notas
 - [Mudança de Status](notes/STATUS_CHANGE.md) - Implementação de mudança de status de leads
 - [Patch Crítico](notes/CRITICAL_PATCH.md) - Correções críticas de segurança e estabilidade
 - [Fixes Finais](notes/FINAL_FIXES.md) - Últimas correções antes do release
-- [Resumo da Sessão](../SESSION_SUMMARY.md) - Resumo das sessões de desenvolvimento
+- [Resumo da Sessão](notes/SESSION_SUMMARY.md) - Resumo das sessões de desenvolvimento
 
 ### Arquivos Obsoletos
 
 A pasta `_obsolete/` contém documentos antigos de reorganização e scripts que não são mais necessários, mas foram preservados para referência histórica. Estes arquivos não devem ser usados como referência para desenvolvimento atual.
-
----
-
-**Nota:** Alguns arquivos de documentação ainda estão na raiz do projeto e serão movidos para esta estrutura em futuras reorganizações.

@@ -1,134 +1,71 @@
 ---
 name: Bug Report
-about: Report a bug to help us improve
+about: Reportar um bug ou comportamento inesperado
 title: '[BUG] '
 labels: bug
 assignees: ''
 ---
 
-## 🐛 Bug Description
+## 🐛 Descrição do Bug
 
-<!-- A clear and concise description of the bug -->
+<!-- Descreva claramente o bug encontrado -->
 
----
+## 📋 Passos para Reproduzir
 
-## 📍 Location
+1. Vá para '...'
+2. Clique em '...'
+3. Role até '...'
+4. Veja o erro
 
-**File:** `path/to/file.tsx`  
-**Line:** (if known)  
-**Component/Function:** 
+## ✅ Comportamento Esperado
 
----
+<!-- Descreva o que deveria acontecer -->
 
-## 🔴 Priority
+## ❌ Comportamento Atual
 
-<!-- Select one -->
-- [ ] **P-0 - Critical** (App crashes, data loss, security issue)
-- [ ] **P-1 - High** (Major feature broken, bad UX)
-- [ ] **P-2 - Medium** (Minor feature issue, workaround exists)
-- [ ] **P-3 - Low** (Nice to have, cosmetic issue)
+<!-- Descreva o que está acontecendo -->
 
----
+## 📸 Screenshots
 
-## 📋 Steps to Reproduce
+<!-- Se aplicável, adicione screenshots para ajudar a explicar o problema -->
 
-1. Go to '...'
-2. Click on '...'
-3. Scroll down to '...'
-4. See error
+## 🖥️ Ambiente
 
----
+**Desktop:**
+- OS: [ex: Windows 11, macOS 14, Ubuntu 22.04]
+- Browser: [ex: Chrome 120, Firefox 121, Safari 17]
+- Versão do Browser: [ex: 120.0.6099.109]
 
-## 💥 Expected Behavior
+**Mobile:**
+- Device: [ex: iPhone 15, Samsung Galaxy S23]
+- OS: [ex: iOS 17.2, Android 14]
+- Browser: [ex: Safari, Chrome]
 
-<!-- What should happen -->
+**Aplicação:**
+- Node version: [ex: 18.17.0]
+- Next.js version: [ex: 14.2.33]
+- Supabase version: [ex: 2.39.0]
 
+## 📝 Logs de Erro
 
----
-
-## 🔧 Actual Behavior
-
-<!-- What actually happens -->
-
-
----
-
-## 🖥️ Environment
-
-**Browser:** Chrome / Firefox / Safari / Edge  
-**Version:** 
-**OS:** Windows / macOS / Linux / iOS / Android  
-**Device:** Desktop / Mobile / Tablet  
-**Screen Size:** 
-
----
-
-## 📸 Screenshots/Videos
-
-<!-- Add screenshots or recordings showing the bug -->
-
-
----
-
-## 🔍 Console Errors
-
-<!-- Paste any console errors (F12 → Console) -->
+<!-- Cole logs de erro do console ou terminal -->
 
 ```
-Paste console errors here
+Cole os logs aqui
 ```
 
----
+## 🔍 Contexto Adicional
 
-## 🔎 Network Errors
+<!-- Adicione qualquer outro contexto sobre o problema -->
 
-<!-- Any failed API calls? (F12 → Network) -->
+## 🔗 Issues Relacionadas
 
-```
-Paste network errors here
-```
-
----
-
-## 🧪 Reproducibility
-
-- [ ] Happens every time
-- [ ] Happens sometimes (% of the time: )
-- [ ] Happened once
-- [ ] Cannot reproduce
-
----
-
-## 🔗 Related Issues
-
-<!-- Link to similar or related issues -->
-
-- Related to #
-- Similar to bug documented in `06-BUGS-AND-FIXES.md#bug-X`
-
----
-
-## 💡 Possible Solution
-
-<!-- Optional: Suggest a fix if you have an idea -->
-
-
----
-
-## 📝 Additional Context
-
-<!-- Any other information about the bug -->
-
-
----
+<!-- Referencie issues relacionadas: #123 -->
 
 ## ✅ Checklist
 
-Before submitting, I have:
-
-- [ ] Searched existing issues to avoid duplicates
-- [ ] Checked `06-BUGS-AND-FIXES.md` for known issues
-- [ ] Included reproduction steps
-- [ ] Added console errors (if any)
-- [ ] Specified environment details
-- [ ] Assigned appropriate priority label
+- [ ] Verifiquei que não há issue duplicada
+- [ ] Testei na última versão do código
+- [ ] Incluí passos claros para reproduzir
+- [ ] Incluí logs de erro (se aplicável)
+- [ ] Incluí screenshots (se aplicável)

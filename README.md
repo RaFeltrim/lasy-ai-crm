@@ -150,9 +150,16 @@ The app uses Next.js Runtime for Netlify and dynamic routes are configured to pr
 │   └── seed.sql              # Sample data
 ├── tests/                     # Vitest unit tests
 ├── playwright/                # Playwright E2E tests
-├── Crm-Documentation/         # Comprehensive project documentation
+├── docs/                      # Centralized documentation
+│   ├── guia/                  # Setup and configuration guides
+│   ├── notes/                 # Technical notes and fixes
+│   ├── crm-documentation/     # Comprehensive CRM documentation
+│   ├── _obsolete/             # Archived/obsolete documentation
+│   └── README.md              # Documentation index
 └── middleware.ts             # Auth middleware for route protection
 ```
+
+Para mais informações sobre a documentação do projeto, consulte [docs/README.md](docs/README.md).
 
 ## 🔐 Authentication
 
@@ -201,6 +208,35 @@ The project uses shadcn/ui components with a dark theme. All components are full
 - Never use the **service_role** key in client-side code
 - For production, set environment variables in your hosting platform (Netlify, Vercel, etc.)
 
+## ⚠️ Segurança de Credenciais
+
+### Se Você Expôs Credenciais Acidentalmente
+
+Se você acidentalmente commitou ou expôs suas chaves do Supabase, siga estes passos imediatamente:
+
+#### 1. Rotacionar Chaves Expostas
+- Acesse o [Supabase Dashboard](https://supabase.com/dashboard)
+- Selecione seu projeto
+- Vá para **Settings** → **API**
+- Clique em **Reset** ao lado da chave exposta
+- Atualize seu `.env.local` com a nova chave
+- Atualize as variáveis de ambiente em sua plataforma de hospedagem
+
+#### 2. Revogar Acesso Comprometido
+- Revise os logs de acesso em **Logs** → **API** no Supabase Dashboard
+- Verifique atividades suspeitas ou não autorizadas
+- Se necessário, revogue tokens de sessão em **Authentication** → **Users**
+- Considere resetar senhas de usuários se houver suspeita de comprometimento
+
+#### 3. Prevenir Futuras Exposições
+- **Nunca** faça commit de arquivos `.env`, `.env.local`, ou `.env.production`
+- Verifique que `.env.local` está no `.gitignore`
+- Use `git log -p` para verificar histórico de commits antes de fazer push
+- Configure pre-commit hooks para detectar credenciais (ex: [git-secrets](https://github.com/awslabs/git-secrets))
+- Use ferramentas como [gitleaks](https://github.com/gitleaks/gitleaks) para escanear o repositório
+- Se expôs no histórico do Git, considere usar `git filter-branch` ou [BFG Repo-Cleaner](https://rtyley.github.io/bfg-repo-cleaner/)
+- Para projetos públicos, considere usar serviços de gerenciamento de segredos (GitHub Secrets, Vault, etc.)
+
 ## 🐛 Troubleshooting
 
 ### Common Issues
@@ -222,6 +258,8 @@ MIT
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+Please read our [Code of Conduct](.github/CODE_OF_CONDUCT.md) before contributing.
 
 ## 📧 Contact
 

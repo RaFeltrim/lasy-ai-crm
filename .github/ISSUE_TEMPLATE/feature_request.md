@@ -1,112 +1,94 @@
 ---
 name: Feature Request
-about: Suggest a new feature or enhancement
+about: Sugerir uma nova funcionalidade para o projeto
 title: '[FEATURE] '
 labels: enhancement
 assignees: ''
 ---
 
-## 💡 Feature Description
+## 🚀 Descrição da Feature
 
-<!-- A clear and concise description of the feature -->
+<!-- Descreva claramente a feature que você gostaria de ver -->
 
----
+## 💡 Motivação
 
-## 🎯 Problem Statement
+<!-- Por que essa feature é importante? Qual problema ela resolve? -->
 
-<!-- What problem does this feature solve? -->
+**Problema atual:**
+<!-- Descreva o problema ou limitação atual -->
 
-**User Story:**  
-As a [user type], I want [goal] so that [benefit].
+**Solução proposta:**
+<!-- Descreva como essa feature resolveria o problema -->
 
----
+## 📝 Casos de Uso
 
-## 🔍 Proposed Solution
+<!-- Descreva cenários específicos onde essa feature seria útil -->
 
-<!-- How should this feature work? -->
+**Caso de Uso 1:**
+<!-- Exemplo: Como gerente de vendas, quero... -->
 
+**Caso de Uso 2:**
+<!-- Exemplo: Como desenvolvedor, quero... -->
 
----
+## 🎨 Proposta de Design (opcional)
 
-## 🎨 Design/Mockups
+<!-- Se tiver ideias de como implementar, descreva aqui -->
 
-<!-- Add mockups, wireframes, or design references -->
+**UI/UX:**
+<!-- Mockups, wireframes, ou descrição da interface -->
 
+**Arquitetura:**
+<!-- Ideias sobre implementação técnica -->
 
----
+## 📸 Mockups/Screenshots (opcional)
 
-## 🔧 Technical Approach
+<!-- Adicione imagens, wireframes ou referências visuais -->
 
-<!-- Optional: Suggest how this could be implemented -->
+## 🔄 Alternativas Consideradas
 
-### Files to Modify
+<!-- Descreva soluções alternativas que você considerou -->
 
+## 📊 Impacto
 
-### New Dependencies Needed
+**Usuários afetados:**
+- [ ] Todos os usuários
+- [ ] Apenas administradores
+- [ ] Apenas desenvolvedores
+- [ ] Outro: ___________
 
+**Prioridade sugerida:**
+- [ ] 🔴 Alta (bloqueador ou muito solicitado)
+- [ ] 🟡 Média (importante mas não urgente)
+- [ ] 🟢 Baixa (nice to have)
 
-### Database Changes Required
-- [ ] Yes - Migration needed
-- [ ] No
+**Complexidade estimada:**
+- [ ] 🟢 Baixa (< 1 dia)
+- [ ] 🟡 Média (1-3 dias)
+- [ ] 🔴 Alta (> 3 dias)
 
----
+## 🔗 Referências
 
-## 📊 Impact
+<!-- Links para documentação, exemplos em outros sistemas, etc. -->
 
-### Who Benefits?
-- [ ] End users
-- [ ] Developers
-- [ ] Business/stakeholders
-- [ ] Operations/DevOps
+## 📋 Tarefas de Implementação (opcional)
 
-### Priority
-- [ ] **Critical** (blocking workflow)
-- [ ] **High** (significant improvement)
-- [ ] **Medium** (nice to have)
-- [ ] **Low** (future enhancement)
+<!-- Se tiver ideias de como implementar, liste as tarefas -->
 
----
+- [ ] Tarefa 1
+- [ ] Tarefa 2
+- [ ] Tarefa 3
 
-## 🧪 Acceptance Criteria
+## 🤝 Disponibilidade para Contribuir
 
-<!-- Define what "done" looks like -->
+- [ ] Posso implementar essa feature
+- [ ] Posso ajudar com testes
+- [ ] Posso ajudar com documentação
+- [ ] Apenas sugestão (não posso contribuir)
 
-- [ ] Feature works as described
-- [ ] Tests added
-- [ ] Documentation updated
-- [ ] Mobile responsive
-- [ ] No performance degradation
+## ✅ Checklist
 
----
-
-## 🔗 Related
-
-<!-- Link to related issues, docs, or discussions -->
-
-- Related to #
-- See documentation: `Crm-Documentation/`
-- Design: 
-
----
-
-## 🚫 Out of Scope
-
-<!-- What is explicitly NOT included in this feature? -->
-
-
----
-
-## 💬 Additional Context
-
-<!-- Any other information -->
-
-
----
-
-## 📚 References
-
-<!-- Links to similar features, articles, examples -->
-
-- Example: 
-- Article: 
-- Documentation: 
+- [ ] Verifiquei que não há feature request duplicada
+- [ ] Descrevi claramente o problema e a solução
+- [ ] Incluí casos de uso específicos
+- [ ] Considerei alternativas
+- [ ] Avaliei impacto e prioridade

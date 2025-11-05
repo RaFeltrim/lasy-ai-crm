@@ -150,9 +150,21 @@ The app uses Next.js Runtime for Netlify and dynamic routes are configured to pr
 │   └── seed.sql              # Sample data
 ├── tests/                     # Vitest unit tests
 ├── playwright/                # Playwright E2E tests
-├── Crm-Documentation/         # Comprehensive project documentation
+├── docs/                      # Comprehensive project documentation
+│   ├── setup/                # Setup and configuration guides
+│   ├── guides/               # User and developer guides
+│   └── fixes/                # Historical bug fixes and patches
 └── middleware.ts             # Auth middleware for route protection
 ```
+
+## 📚 Documentation
+
+For comprehensive documentation, see the **[docs/](docs/)** directory:
+
+- **Setup Guides**: [Authentication](docs/setup/AUTHENTICATION.md), [Supabase Setup](docs/setup/SUPABASE_SETUP.md)
+- **Developer Guides**: [Architecture](docs/guides/02-ARCHITECTURE.md), [API Reference](docs/guides/03-API-REFERENCE.md), [Components](docs/guides/04-COMPONENTS.md)
+- **Operations**: [Deployment](docs/guides/11-DEPLOYMENT.md), [Troubleshooting](docs/guides/09-TROUBLESHOOTING.md), [Performance](docs/guides/10-PERFORMANCE.md)
+- **[Complete Documentation Index](docs/README.md)**
 
 ## 🔐 Authentication
 

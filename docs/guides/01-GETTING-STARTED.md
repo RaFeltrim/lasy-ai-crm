@@ -126,10 +126,12 @@ Nova pasta/
 │   └── zod-schemas.ts        # Validation schemas
 ├── supabase/                 # Database migrations
 │   └── migrations/           # SQL migration files
-├── __tests__/                # Test files
-│   ├── unit/                 # Vitest unit tests
-│   └── e2e/                  # Playwright E2E tests
-└── Crm-Documentation/        # This documentation
+├── docs/                     # Comprehensive documentation
+│   ├── setup/                # Setup and configuration guides
+│   ├── guides/               # User and developer guides
+│   └── fixes/                # Historical bug fixes
+├── tests/                    # Vitest unit tests
+└── playwright/               # Playwright E2E tests
 ```
 
 ---

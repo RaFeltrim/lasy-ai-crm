@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -16,7 +15,6 @@ import { toast } from '@/components/ui/use-toast'
 import { ArrowLeft } from 'lucide-react'
 
 export default function NewLeadPage() {
-  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   const form = useForm<LeadCreate>({
@@ -35,8 +33,6 @@ export default function NewLeadPage() {
   const { handleSubmit, control, formState: { isSubmitting } } = form
 
   const onSubmit = async (data: LeadCreate) => {
-    setLoading(true)
-
     try {
       // Ensure status is lowercase to match DB enum constraint
       const leadData = {
@@ -63,15 +59,13 @@ export default function NewLeadPage() {
 
       router.push('/dashboard')
       router.refresh()
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: 'Error creating lead',
-        description: error.message || 'Failed to create lead. Please check your input and try again.',
+        description: error instanceof Error ? error.message : 'Failed to create lead. Please check your input and try again.',
         variant: 'destructive',
         duration: 10000, // 10 seconds for errors
       })
-    } finally {
-      setLoading(false)
     }
   }
 

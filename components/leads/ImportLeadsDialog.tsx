@@ -99,10 +99,10 @@ export function ImportLeadsDialog() {
       setTimeout(() => {
         window.location.reload()
       }, 500)
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: 'Import failed',
-        description: error.message || 'An error occurred during import',
+        description: error instanceof Error ? error.message : 'An error occurred during import',
         variant: 'destructive',
       })
     } finally {
@@ -161,7 +161,7 @@ export function ImportLeadsDialog() {
               <li>email (optional)</li>
               <li>phone (optional)</li>
               <li>company (optional)</li>
-              <li>status (optional, defaults to 'new')</li>
+              <li>status (optional, defaults to &apos;new&apos;)</li>
               <li>source (optional)</li>
             </ul>
           </div>

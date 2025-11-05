@@ -95,12 +95,21 @@ export async function POST(
     }
 
     return NextResponse.json(interaction, { status: 201 })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error in POST /api/leads/[id]/interactions:', error)
 
-    if (error.name === 'ZodError') {
+    // Check if error is a Zod validation error
+    if (
+      error &&
+      typeof error === 'object' &&
+      'name' in error &&
+      error.name === 'ZodError' &&
+      'errors' in error &&
+      Array.isArray((error as { errors: unknown }).errors)
+    ) {
+      const zodError = error as { errors: Array<{ message: string; path: Array<string | number> }> }
       return NextResponse.json(
-        { error: 'Validation error', details: error.errors },
+        { error: 'Validation error', details: zodError.errors },
         { status: 400 }
       )
     }

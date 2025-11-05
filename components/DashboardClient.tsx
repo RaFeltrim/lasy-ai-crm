@@ -61,14 +61,14 @@ export function DashboardClient({ initialLeads }: DashboardClientProps) {
         description: 'Lead status updated',
         duration: 3000,
       })
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Revert optimistic update
       setLeads(previousLeads)
       
       console.error('Error updating lead status:', error)
       toast({
         title: 'Error',
-        description: error.message || 'Failed to update lead status',
+        description: error instanceof Error ? error.message : 'Failed to update lead status',
         variant: 'destructive',
         duration: 10000, // 10 seconds for errors
       })

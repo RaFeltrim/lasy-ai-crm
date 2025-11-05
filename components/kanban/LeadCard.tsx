@@ -30,7 +30,7 @@ export function LeadCard({ lead, onClick, isDragging }: LeadCardProps) {
   }
 
   // Handle click with delay to differentiate from drag
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = () => {
     // Only trigger on single click, not during drag
     if (!isSortableDragging) {
       onClick()

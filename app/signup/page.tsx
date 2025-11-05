@@ -89,10 +89,10 @@ export default function SignupPage() {
           router.push('/login')
         }, 2000)
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: 'Error',
-        description: error.message || 'An unexpected error occurred',
+        description: error instanceof Error ? error.message : 'An unexpected error occurred',
         variant: 'destructive',
       })
       setLoading(false)

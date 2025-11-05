@@ -35,13 +35,13 @@ export async function POST(request: NextRequest) {
     const fileBuffer = await file.arrayBuffer()
     const buffer = Buffer.from(fileBuffer)
 
-    let rows: any[] = []
+    let rows: Record<string, unknown>[] = []
 
     // Parse based on file type
     if (file.name.endsWith('.csv')) {
       const text = buffer.toString('utf-8')
       const result = Papa.parse(text, { header: true, skipEmptyLines: true })
-      rows = result.data
+      rows = result.data as Record<string, unknown>[]
     } else if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
       const workbook = XLSX.read(buffer, { type: 'buffer' })
       const sheetName = workbook.SheetNames[0]
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
       updated: 0,
       skipped: 0,
       rejected: 0,
-      errors: [] as any[],
+      errors: [] as Array<{ row: number; data: unknown; error: string }>,
     }
 
     // Process each row
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
 
       try {
         // Map common column names (case-insensitive)
-        const leadData: any = {}
+        const leadData: Record<string, unknown> = {}
 
         Object.keys(row).forEach((key) => {
           const lowerKey = key.toLowerCase().trim()
@@ -92,19 +92,32 @@ export async function POST(request: NextRequest) {
         })
 
         // Sanitize CSV injection and normalize empty values
-        if (leadData.name) leadData.name = sanitizeCSVValue(leadData.name)
-        if (leadData.email) leadData.email = sanitizeCSVValue(leadData.email)
+        if (leadData.name && typeof leadData.name === 'string') {
+          leadData.name = sanitizeCSVValue(leadData.name)
+        }
+        if (leadData.email && typeof leadData.email === 'string') {
+          leadData.email = sanitizeCSVValue(leadData.email)
+        }
         
         // Special handling for phone - convert null/empty/undefined to undefined
         if (leadData.phone !== undefined) {
-          const sanitized = sanitizeCSVValue(leadData.phone)
-          leadData.phone = cleanPhoneNumber(sanitized)
+          const phoneValue = leadData.phone
+          if (phoneValue && typeof phoneValue === 'string') {
+            const sanitized = sanitizeCSVValue(phoneValue)
+            leadData.phone = cleanPhoneNumber(sanitized)
+          } else {
+            leadData.phone = undefined
+          }
         } else {
           leadData.phone = undefined // Explicitly set to undefined if not present
         }
         
-        if (leadData.company) leadData.company = sanitizeCSVValue(leadData.company)
-        if (leadData.source) leadData.source = sanitizeCSVValue(leadData.source)
+        if (leadData.company && typeof leadData.company === 'string') {
+          leadData.company = sanitizeCSVValue(leadData.company)
+        }
+        if (leadData.source && typeof leadData.source === 'string') {
+          leadData.source = sanitizeCSVValue(leadData.source)
+        }
 
         // Validate with Zod
         const validatedData = LeadCreateSchema.parse(leadData)
@@ -164,12 +177,12 @@ export async function POST(request: NextRequest) {
             results.inserted++
           }
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         results.rejected++
         results.errors.push({
           row: i + 1,
           data: row,
-          error: error.message || 'Validation failed',
+          error: error instanceof Error ? error.message : 'Validation failed',
         })
       }
     }

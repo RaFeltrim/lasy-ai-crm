@@ -95,12 +95,12 @@ export async function POST(
     }
 
     return NextResponse.json(interaction, { status: 201 })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error in POST /api/leads/[id]/interactions:', error)
 
-    if (error.name === 'ZodError') {
+    if (error instanceof Error && error.name === 'ZodError') {
       return NextResponse.json(
-        { error: 'Validation error', details: error.errors },
+        { error: 'Validation error', details: (error as { errors?: unknown }).errors },
         { status: 400 }
       )
     }

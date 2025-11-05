@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase-server'
 import { InteractionCreateSchema } from '@/lib/zod-schemas'
 import { NextRequest, NextResponse } from 'next/server'
+import { ZodError } from 'zod'
 
 export async function GET(
   request: NextRequest,
@@ -95,10 +96,10 @@ export async function POST(
     }
 
     return NextResponse.json(interaction, { status: 201 })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error in POST /api/leads/[id]/interactions:', error)
 
-    if (error.name === 'ZodError') {
+    if (error instanceof ZodError) {
       return NextResponse.json(
         { error: 'Validation error', details: error.errors },
         { status: 400 }

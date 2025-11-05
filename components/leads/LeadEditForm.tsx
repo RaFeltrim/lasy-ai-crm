@@ -90,10 +90,10 @@ export function LeadEditForm({ lead }: LeadEditFormProps) {
 
       router.push('/dashboard')
       router.refresh()
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: 'Error updating lead',
-        description: error.message || 'Failed to update lead. Please try again.',
+        description: error instanceof Error ? error.message : 'Failed to update lead. Please try again.',
         variant: 'destructive',
         duration: 10000, // 10 seconds for errors
       })
@@ -126,10 +126,10 @@ export function LeadEditForm({ lead }: LeadEditFormProps) {
       router.refresh()
       // Force page reload to ensure state is clean
       setTimeout(() => window.location.href = '/dashboard', 100)
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: 'Error deleting lead',
-        description: error.message || 'Failed to delete lead. Please try again.',
+        description: error instanceof Error ? error.message : 'Failed to delete lead. Please try again.',
         variant: 'destructive',
         duration: 10000, // 10 seconds for errors
       })
@@ -175,7 +175,7 @@ export function LeadEditForm({ lead }: LeadEditFormProps) {
               <AlertDialogTitle>Are you sure?</AlertDialogTitle>
               <AlertDialogDescription>
                 This action cannot be undone. This will permanently delete the lead
-                "{lead.name}" and all associated interactions.
+                &quot;{lead.name}&quot; and all associated interactions.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

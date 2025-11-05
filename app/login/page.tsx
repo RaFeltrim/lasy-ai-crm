@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase-client'
 import { Button } from '@/components/ui/button'
@@ -14,7 +13,6 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const router = useRouter()
   const supabase = createClient()
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -46,7 +44,7 @@ export default function LoginPage() {
         // Force navigation with window.location for reliable redirect
         window.location.href = '/dashboard'
       }
-    } catch (error) {
+    } catch {
       toast({
         title: 'Error',
         description: 'An unexpected error occurred',
@@ -65,7 +63,7 @@ export default function LoginPage() {
             Enter your credentials to access your account
           </CardDescription>
           <p className="text-xs text-muted-foreground text-center mt-2">
-            Don't have an account? Create one in Supabase Dashboard
+            Don&apos;t have an account? Create one in Supabase Dashboard
           </p>
         </CardHeader>
         <CardContent>
@@ -98,7 +96,7 @@ export default function LoginPage() {
               {loading ? 'Loading...' : 'Entrar'}
             </Button>
             <div className="text-center text-sm">
-              <span className="text-muted-foreground">Don't have an account? </span>
+              <span className="text-muted-foreground">Don&apos;t have an account? </span>
               <Link href="/signup" className="text-primary hover:underline">
                 Create account
               </Link>

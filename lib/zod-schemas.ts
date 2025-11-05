@@ -1,62 +1,68 @@
-import { z } from 'zod'
+import { z } from "zod";
 
 // Lead status enum (lowercase to match DB)
-export const LeadStatusEnum = z.enum(['new', 'contacted', 'qualified', 'pending', 'lost'])
-export type LeadStatus = z.infer<typeof LeadStatusEnum>
+export const LeadStatusEnum = z.enum([
+  "new",
+  "contacted",
+  "qualified",
+  "pending",
+  "lost",
+]);
+export type LeadStatus = z.infer<typeof LeadStatusEnum>;
 
 // Interaction type enum
-export const InteractionTypeEnum = z.enum(['call', 'email', 'meeting', 'note'])
-export type InteractionType = z.infer<typeof InteractionTypeEnum>
+export const InteractionTypeEnum = z.enum(["call", "email", "meeting", "note"]);
+export type InteractionType = z.infer<typeof InteractionTypeEnum>;
 
 // Lead Create Schema
 export const LeadCreateSchema = z.object({
-  name: z.string().trim().min(1, 'Name is required'),
+  name: z.string().trim().min(1, "Name is required"),
   email: z
     .string()
-    .email('Invalid email format')
-    .or(z.literal(''))
+    .email("Invalid email format")
+    .or(z.literal(""))
     .optional()
     .transform((v) => v || undefined),
   phone: z
     .union([
-      z.string().trim().refine(
-        (val) => {
+      z
+        .string()
+        .trim()
+        .refine((val) => {
           // Accept any string that has at least some digits
           // Very permissive - just check if it has numbers
-          const hasDigits = /\d/.test(val)
-          return hasDigits || val === ''
-        },
-        'Invalid phone format. Phone must contain at least one digit'
-      ),
-      z.literal(''),
+          const hasDigits = /\d/.test(val);
+          return hasDigits || val === "";
+        }, "Invalid phone format. Phone must contain at least one digit"),
+      z.literal(""),
       z.null(),
       z.undefined(),
     ])
     .optional()
     .transform((v) => {
-      if (v === null || v === undefined || v === '') return undefined
-      return v
+      if (v === null || v === undefined || v === "") return undefined;
+      return v;
     }),
   company: z.string().trim().optional(),
-  status: LeadStatusEnum.optional().default('new'),
+  status: LeadStatusEnum.optional().default("new"),
   notes: z.string().trim().optional(),
   source: z.string().trim().optional(),
-})
+});
 
-export type LeadCreate = z.infer<typeof LeadCreateSchema>
+export type LeadCreate = z.infer<typeof LeadCreateSchema>;
 
 // Lead Update Schema (all fields optional)
-export const LeadUpdateSchema = LeadCreateSchema.partial()
-export type LeadUpdate = z.infer<typeof LeadUpdateSchema>
+export const LeadUpdateSchema = LeadCreateSchema.partial();
+export type LeadUpdate = z.infer<typeof LeadUpdateSchema>;
 
 // Interaction Create Schema
 export const InteractionCreateSchema = z.object({
   type: InteractionTypeEnum,
-  content: z.string().trim().min(1, 'Content is required'),
+  content: z.string().trim().min(1, "Content is required"),
   occurred_at: z.string().optional(),
-})
+});
 
-export type InteractionCreate = z.infer<typeof InteractionCreateSchema>
+export type InteractionCreate = z.infer<typeof InteractionCreateSchema>;
 
 // Filter Schema
 export const LeadFilterSchema = z.object({
@@ -65,6 +71,6 @@ export const LeadFilterSchema = z.object({
   source: z.string().optional(),
   from: z.string().optional(),
   to: z.string().optional(),
-})
+});
 
-export type LeadFilter = z.infer<typeof LeadFilterSchema>
+export type LeadFilter = z.infer<typeof LeadFilterSchema>;

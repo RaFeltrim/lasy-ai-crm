@@ -1,9 +1,9 @@
 ---
 name: Feature Request
 about: Suggest a new feature or enhancement
-title: '[FEATURE] '
+title: "[FEATURE] "
 labels: enhancement
-assignees: ''
+assignees: ""
 ---
 
 ## 💡 Feature Description
@@ -25,13 +25,11 @@ As a [user type], I want [goal] so that [benefit].
 
 <!-- How should this feature work? -->
 
-
 ---
 
 ## 🎨 Design/Mockups
 
 <!-- Add mockups, wireframes, or design references -->
-
 
 ---
 
@@ -41,11 +39,10 @@ As a [user type], I want [goal] so that [benefit].
 
 ### Files to Modify
 
-
 ### New Dependencies Needed
 
-
 ### Database Changes Required
+
 - [ ] Yes - Migration needed
 - [ ] No
 
@@ -54,12 +51,14 @@ As a [user type], I want [goal] so that [benefit].
 ## 📊 Impact
 
 ### Who Benefits?
+
 - [ ] End users
 - [ ] Developers
 - [ ] Business/stakeholders
 - [ ] Operations/DevOps
 
 ### Priority
+
 - [ ] **Critical** (blocking workflow)
 - [ ] **High** (significant improvement)
 - [ ] **Medium** (nice to have)
@@ -85,7 +84,7 @@ As a [user type], I want [goal] so that [benefit].
 
 - Related to #
 - See documentation: `Crm-Documentation/`
-- Design: 
+- Design:
 
 ---
 
@@ -93,13 +92,11 @@ As a [user type], I want [goal] so that [benefit].
 
 <!-- What is explicitly NOT included in this feature? -->
 
-
 ---
 
 ## 💬 Additional Context
 
 <!-- Any other information -->
-
 
 ---
 
@@ -107,6 +104,6 @@ As a [user type], I want [goal] so that [benefit].
 
 <!-- Links to similar features, articles, examples -->
 
-- Example: 
-- Article: 
-- Documentation: 
+- Example:
+- Article:
+- Documentation:

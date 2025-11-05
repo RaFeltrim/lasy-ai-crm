@@ -1,19 +1,29 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { LeadUpdateSchema, LeadStatus, type LeadUpdate } from '@/lib/zod-schemas'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { PhoneInput } from '@/components/ui/phone-input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
-import { toast } from '@/components/ui/use-toast'
-import { ArrowLeft, Save, Trash2, Clock } from 'lucide-react'
-import { formatDateTime } from '@/lib/utils'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  LeadUpdateSchema,
+  LeadStatus,
+  type LeadUpdate,
+} from "@/lib/zod-schemas";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { PhoneInput } from "@/components/ui/phone-input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "@/components/ui/use-toast";
+import { ArrowLeft, Save, Trash2, Clock } from "lucide-react";
+import { formatDateTime } from "@/lib/utils";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,27 +34,27 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
+} from "@/components/ui/alert-dialog";
 
 interface LeadEditFormProps {
   lead: {
-    id: string
-    name: string
-    email?: string
-    phone?: string
-    company?: string
-    status: LeadStatus
-    source?: string
-    notes?: string
-    created_at: string
-    updated_at: string
-  }
+    id: string;
+    name: string;
+    email?: string;
+    phone?: string;
+    company?: string;
+    status: LeadStatus;
+    source?: string;
+    notes?: string;
+    created_at: string;
+    updated_at: string;
+  };
 }
 
 export function LeadEditForm({ lead }: LeadEditFormProps) {
-  const router = useRouter()
-  const [loading, setLoading] = useState(false)
-  const [deleting, setDeleting] = useState(false)
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const {
     register,
@@ -56,86 +66,92 @@ export function LeadEditForm({ lead }: LeadEditFormProps) {
     resolver: zodResolver(LeadUpdateSchema),
     defaultValues: {
       name: lead.name,
-      email: lead.email || '',
-      phone: lead.phone || '',
-      company: lead.company || '',
+      email: lead.email || "",
+      phone: lead.phone || "",
+      company: lead.company || "",
       status: lead.status,
-      source: lead.source || '',
-      notes: lead.notes || '',
+      source: lead.source || "",
+      notes: lead.notes || "",
     },
-  })
+  });
 
-  const statusValue = watch('status')
+  const statusValue = watch("status");
 
   const onSubmit = async (data: LeadUpdate) => {
-    setLoading(true)
+    setLoading(true);
 
     try {
       const response = await fetch(`/api/leads/${lead.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
-      })
+      });
 
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to update lead')
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to update lead");
       }
 
       toast({
-        title: 'Success',
-        description: 'Lead updated successfully',
+        title: "Success",
+        description: "Lead updated successfully",
         duration: 3000,
-      })
+      });
 
-      router.push('/dashboard')
-      router.refresh()
+      router.push("/dashboard");
+      router.refresh();
     } catch (error: unknown) {
       toast({
-        title: 'Error updating lead',
-        description: error instanceof Error ? error.message : 'Failed to update lead. Please try again.',
-        variant: 'destructive',
+        title: "Error updating lead",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Failed to update lead. Please try again.",
+        variant: "destructive",
         duration: 10000, // 10 seconds for errors
-      })
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleDelete = async () => {
-    setDeleting(true)
+    setDeleting(true);
 
     try {
       const response = await fetch(`/api/leads/${lead.id}`, {
-        method: 'DELETE',
-      })
+        method: "DELETE",
+      });
 
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to delete lead')
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to delete lead");
       }
 
       toast({
-        title: 'Success',
-        description: 'Lead deleted successfully',
+        title: "Success",
+        description: "Lead deleted successfully",
         duration: 3000,
-      })
+      });
 
       // Force navigation and refresh
-      router.push('/dashboard')
-      router.refresh()
+      router.push("/dashboard");
+      router.refresh();
       // Force page reload to ensure state is clean
-      setTimeout(() => window.location.href = '/dashboard', 100)
+      setTimeout(() => (window.location.href = "/dashboard"), 100);
     } catch (error: unknown) {
       toast({
-        title: 'Error deleting lead',
-        description: error instanceof Error ? error.message : 'Failed to delete lead. Please try again.',
-        variant: 'destructive',
+        title: "Error deleting lead",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Failed to delete lead. Please try again.",
+        variant: "destructive",
         duration: 10000, // 10 seconds for errors
-      })
-      setDeleting(false)
+      });
+      setDeleting(false);
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -145,7 +161,7 @@ export function LeadEditForm({ lead }: LeadEditFormProps) {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => router.push('/dashboard')}
+            onClick={() => router.push("/dashboard")}
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
@@ -174,13 +190,16 @@ export function LeadEditForm({ lead }: LeadEditFormProps) {
             <AlertDialogHeader>
               <AlertDialogTitle>Are you sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete the lead
-                &quot;{lead.name}&quot; and all associated interactions.
+                This action cannot be undone. This will permanently delete the
+                lead &quot;{lead.name}&quot; and all associated interactions.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              <AlertDialogAction
+                onClick={handleDelete}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
                 Delete
               </AlertDialogAction>
             </AlertDialogFooter>
@@ -198,12 +217,14 @@ export function LeadEditForm({ lead }: LeadEditFormProps) {
               </Label>
               <Input
                 id="name"
-                {...register('name')}
+                {...register("name")}
                 disabled={loading}
                 placeholder="John Doe"
               />
               {errors.name && (
-                <p className="text-sm text-destructive">{errors.name.message}</p>
+                <p className="text-sm text-destructive">
+                  {errors.name.message}
+                </p>
               )}
             </div>
 
@@ -212,12 +233,14 @@ export function LeadEditForm({ lead }: LeadEditFormProps) {
               <Input
                 id="email"
                 type="email"
-                {...register('email')}
+                {...register("email")}
                 disabled={loading}
                 placeholder="john@example.com"
               />
               {errors.email && (
-                <p className="text-sm text-destructive">{errors.email.message}</p>
+                <p className="text-sm text-destructive">
+                  {errors.email.message}
+                </p>
               )}
             </div>
 
@@ -225,13 +248,15 @@ export function LeadEditForm({ lead }: LeadEditFormProps) {
               <Label htmlFor="phone">Phone</Label>
               <PhoneInput
                 id="phone"
-                value={watch('phone') || ''}
-                onAccept={(value) => setValue('phone', value)}
+                value={watch("phone") || ""}
+                onAccept={(value) => setValue("phone", value)}
                 disabled={loading}
                 placeholder="+55 (19) 99999-9999"
               />
               {errors.phone && (
-                <p className="text-sm text-destructive">{errors.phone.message}</p>
+                <p className="text-sm text-destructive">
+                  {errors.phone.message}
+                </p>
               )}
             </div>
 
@@ -239,20 +264,24 @@ export function LeadEditForm({ lead }: LeadEditFormProps) {
               <Label htmlFor="company">Company</Label>
               <Input
                 id="company"
-                {...register('company')}
+                {...register("company")}
                 disabled={loading}
                 placeholder="Acme Inc."
               />
               {errors.company && (
-                <p className="text-sm text-destructive">{errors.company.message}</p>
+                <p className="text-sm text-destructive">
+                  {errors.company.message}
+                </p>
               )}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="status">Status</Label>
               <Select
-                value={statusValue || 'new'}
-                onValueChange={(value) => setValue('status', value as LeadStatus)}
+                value={statusValue || "new"}
+                onValueChange={(value) =>
+                  setValue("status", value as LeadStatus)
+                }
                 disabled={loading}
               >
                 <SelectTrigger id="status">
@@ -267,7 +296,9 @@ export function LeadEditForm({ lead }: LeadEditFormProps) {
                 </SelectContent>
               </Select>
               {errors.status && (
-                <p className="text-sm text-destructive">{errors.status.message}</p>
+                <p className="text-sm text-destructive">
+                  {errors.status.message}
+                </p>
               )}
             </div>
 
@@ -275,12 +306,14 @@ export function LeadEditForm({ lead }: LeadEditFormProps) {
               <Label htmlFor="source">Source</Label>
               <Input
                 id="source"
-                {...register('source')}
+                {...register("source")}
                 disabled={loading}
                 placeholder="Website, Referral, etc."
               />
               {errors.source && (
-                <p className="text-sm text-destructive">{errors.source.message}</p>
+                <p className="text-sm text-destructive">
+                  {errors.source.message}
+                </p>
               )}
             </div>
           </div>
@@ -289,7 +322,7 @@ export function LeadEditForm({ lead }: LeadEditFormProps) {
             <Label htmlFor="notes">Notes</Label>
             <Textarea
               id="notes"
-              {...register('notes')}
+              {...register("notes")}
               disabled={loading}
               placeholder="Add any additional information..."
               rows={4}
@@ -304,17 +337,17 @@ export function LeadEditForm({ lead }: LeadEditFormProps) {
           <Button
             type="button"
             variant="outline"
-            onClick={() => router.push('/dashboard')}
+            onClick={() => router.push("/dashboard")}
             disabled={loading}
           >
             Cancel
           </Button>
           <Button type="submit" disabled={loading}>
             <Save className="h-4 w-4 mr-2" />
-            {loading ? 'Saving...' : 'Save Changes'}
+            {loading ? "Saving..." : "Save Changes"}
           </Button>
         </div>
       </form>
     </div>
-  )
+  );
 }

@@ -1,73 +1,93 @@
-'use client'
+"use client";
 
-import { useRouter } from 'next/navigation'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { LeadCreateSchema, type LeadCreate } from '@/lib/zod-schemas'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { PhoneInput } from '@/components/ui/phone-input'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { toast } from '@/components/ui/use-toast'
-import { ArrowLeft } from 'lucide-react'
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LeadCreateSchema, type LeadCreate } from "@/lib/zod-schemas";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { PhoneInput } from "@/components/ui/phone-input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { toast } from "@/components/ui/use-toast";
+import { ArrowLeft } from "lucide-react";
 
 export default function NewLeadPage() {
-  const router = useRouter()
+  const router = useRouter();
 
   const form = useForm<LeadCreate>({
     resolver: zodResolver(LeadCreateSchema),
     defaultValues: {
-      name: '',
-      email: '',
-      phone: '',
-      company: '',
-      status: 'new',
-      source: '',
-      notes: '',
+      name: "",
+      email: "",
+      phone: "",
+      company: "",
+      status: "new",
+      source: "",
+      notes: "",
     },
-  })
+  });
 
-  const { handleSubmit, control, formState: { isSubmitting } } = form
+  const {
+    handleSubmit,
+    control,
+    formState: { isSubmitting },
+  } = form;
 
   const onSubmit = async (data: LeadCreate) => {
     try {
       // Ensure status is lowercase to match DB enum constraint
       const leadData = {
         ...data,
-        status: data.status ? data.status.toLowerCase() : 'new',
-      }
+        status: data.status ? data.status.toLowerCase() : "new",
+      };
 
-      const response = await fetch('/api/leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(leadData),
-      })
+      });
 
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to create lead')
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to create lead");
       }
 
       toast({
-        title: 'Success',
-        description: 'Lead created successfully!',
+        title: "Success",
+        description: "Lead created successfully!",
         duration: 3000,
-      })
+      });
 
-      router.push('/dashboard')
-      router.refresh()
+      router.push("/dashboard");
+      router.refresh();
     } catch (error: unknown) {
       toast({
-        title: 'Error creating lead',
-        description: error instanceof Error ? error.message : 'Failed to create lead. Please check your input and try again.',
-        variant: 'destructive',
+        title: "Error creating lead",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Failed to create lead. Please check your input and try again.",
+        variant: "destructive",
         duration: 10000, // 10 seconds for errors
-      })
+      });
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
@@ -107,7 +127,11 @@ export default function NewLeadPage() {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input type="email" placeholder="john@example.com" {...field} />
+                        <Input
+                          type="email"
+                          placeholder="john@example.com"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -153,7 +177,12 @@ export default function NewLeadPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Status</FormLabel>
-                      <Select onValueChange={(value) => field.onChange(value.toLowerCase())} defaultValue={field.value}>
+                      <Select
+                        onValueChange={(value) =>
+                          field.onChange(value.toLowerCase())
+                        }
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue />
@@ -179,7 +208,10 @@ export default function NewLeadPage() {
                     <FormItem>
                       <FormLabel>Source</FormLabel>
                       <FormControl>
-                        <Input placeholder="website, referral, etc." {...field} />
+                        <Input
+                          placeholder="website, referral, etc."
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -193,7 +225,11 @@ export default function NewLeadPage() {
                     <FormItem>
                       <FormLabel>Notes</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="Additional notes..." rows={4} {...field} />
+                        <Textarea
+                          placeholder="Additional notes..."
+                          rows={4}
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -202,7 +238,7 @@ export default function NewLeadPage() {
 
                 <div className="flex gap-2">
                   <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? 'Creating...' : 'Create Lead'}
+                    {isSubmitting ? "Creating..." : "Create Lead"}
                   </Button>
                   <Button
                     type="button"
@@ -219,5 +255,5 @@ export default function NewLeadPage() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

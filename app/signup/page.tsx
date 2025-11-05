@@ -1,46 +1,52 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase-client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { toast } from '@/components/ui/use-toast'
-import Link from 'next/link'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase-client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { toast } from "@/components/ui/use-toast";
+import Link from "next/link";
 
 export default function SignupPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [fullName, setFullName] = useState('')
-  const [loading, setLoading] = useState(false)
-  const router = useRouter()
-  const supabase = createClient()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const supabase = createClient();
 
   const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     if (password !== confirmPassword) {
       toast({
-        title: 'Error',
-        description: 'Passwords do not match',
-        variant: 'destructive',
-      })
-      return
+        title: "Error",
+        description: "Passwords do not match",
+        variant: "destructive",
+      });
+      return;
     }
 
     if (password.length < 6) {
       toast({
-        title: 'Error',
-        description: 'Password must be at least 6 characters',
-        variant: 'destructive',
-      })
-      return
+        title: "Error",
+        description: "Password must be at least 6 characters",
+        variant: "destructive",
+      });
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
 
     try {
       const { data, error } = await supabase.auth.signUp({
@@ -51,59 +57,63 @@ export default function SignupPage() {
             full_name: fullName,
           },
         },
-      })
+      });
 
       if (error) {
         toast({
-          title: 'Error',
+          title: "Error",
           description: error.message,
-          variant: 'destructive',
-        })
-        setLoading(false)
-        return
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
       }
 
       if (data?.user) {
         // Create profile entry
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert([
-            {
-              id: data.user.id,
-              email: data.user.email,
-              full_name: fullName,
-            },
-          ])
+        const { error: profileError } = await supabase.from("profiles").insert([
+          {
+            id: data.user.id,
+            email: data.user.email,
+            full_name: fullName,
+          },
+        ]);
 
         if (profileError) {
-          console.error('Profile creation error:', profileError)
+          console.error("Profile creation error:", profileError);
         }
 
         toast({
-          title: 'Success',
-          description: 'Account created successfully! Please check your email for verification.',
-        })
+          title: "Success",
+          description:
+            "Account created successfully! Please check your email for verification.",
+        });
 
         // Redirect to login after 2 seconds
         setTimeout(() => {
-          router.push('/login')
-        }, 2000)
+          router.push("/login");
+        }, 2000);
       }
     } catch (error: unknown) {
       toast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'An unexpected error occurred',
-        variant: 'destructive',
-      })
-      setLoading(false)
+        title: "Error",
+        description:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred",
+        variant: "destructive",
+      });
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full sm:max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-3xl font-bold text-center">Create Account</CardTitle>
+          <CardTitle className="text-3xl font-bold text-center">
+            Create Account
+          </CardTitle>
           <CardDescription className="text-center">
             Enter your information to create a new account
           </CardDescription>
@@ -161,10 +171,12 @@ export default function SignupPage() {
               />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Creating account...' : 'Create Account'}
+              {loading ? "Creating account..." : "Create Account"}
             </Button>
             <div className="text-center text-sm">
-              <span className="text-muted-foreground">Already have an account? </span>
+              <span className="text-muted-foreground">
+                Already have an account?{" "}
+              </span>
               <Link href="/login" className="text-primary hover:underline">
                 Sign in
               </Link>
@@ -173,5 +185,5 @@ export default function SignupPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

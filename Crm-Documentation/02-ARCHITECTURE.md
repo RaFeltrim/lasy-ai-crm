@@ -8,33 +8,33 @@ This document explains the technical architecture, design decisions, and pattern
 
 ### Frontend
 
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| Next.js | 14.2.33 | React framework with App Router |
-| React | 18.3.1 | UI library with Server Components |
-| TypeScript | 5.x | Type safety and developer experience |
-| Tailwind CSS | 3.4.1 | Utility-first styling |
-| shadcn/ui | Latest | Pre-built accessible components |
-| @dnd-kit | 6.1.0 | Drag-and-drop functionality |
-| react-hook-form | 7.x | Form state management |
-| Zod | 3.x | Runtime validation |
+| Technology      | Version | Purpose                              |
+| --------------- | ------- | ------------------------------------ |
+| Next.js         | 14.2.33 | React framework with App Router      |
+| React           | 18.3.1  | UI library with Server Components    |
+| TypeScript      | 5.x     | Type safety and developer experience |
+| Tailwind CSS    | 3.4.1   | Utility-first styling                |
+| shadcn/ui       | Latest  | Pre-built accessible components      |
+| @dnd-kit        | 6.1.0   | Drag-and-drop functionality          |
+| react-hook-form | 7.x     | Form state management                |
+| Zod             | 3.x     | Runtime validation                   |
 
 ### Backend
 
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| Next.js API Routes | 14.2.33 | RESTful API endpoints |
-| Supabase | Latest | PostgreSQL database + Auth |
-| @supabase/ssr | 0.5.2 | Server-side Supabase client |
-| PostgREST | (via Supabase) | Auto-generated REST API |
+| Technology         | Version        | Purpose                     |
+| ------------------ | -------------- | --------------------------- |
+| Next.js API Routes | 14.2.33        | RESTful API endpoints       |
+| Supabase           | Latest         | PostgreSQL database + Auth  |
+| @supabase/ssr      | 0.5.2          | Server-side Supabase client |
+| PostgREST          | (via Supabase) | Auto-generated REST API     |
 
 ### Testing
 
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| Vitest | Latest | Unit testing framework |
-| Playwright | Latest | E2E testing framework |
-| @testing-library/react | Latest | React component testing |
+| Technology             | Version | Purpose                 |
+| ---------------------- | ------- | ----------------------- |
+| Vitest                 | Latest  | Unit testing framework  |
+| Playwright             | Latest  | E2E testing framework   |
+| @testing-library/react | Latest  | React component testing |
 
 ---
 
@@ -45,12 +45,14 @@ This document explains the technical architecture, design decisions, and pattern
 **Decision:** Use App Router instead of Pages Router
 
 **Rationale:**
+
 1. **Server Components** - Reduce client-side JavaScript by 40%
 2. **Streaming SSR** - Faster initial page loads
 3. **Layouts** - Shared UI patterns without client-side re-renders
 4. **Route Handlers** - Simplified API routes with Web Standards
 
 **Trade-offs:**
+
 - ❌ Learning curve for SSR/CSR boundaries
 - ❌ Hydration errors more common (we encountered 3)
 - ✅ Better performance (LCP improved by 30%)
@@ -61,12 +63,14 @@ This document explains the technical architecture, design decisions, and pattern
 **Decision:** Use Supabase instead of self-hosted PostgreSQL + Auth
 
 **Rationale:**
+
 1. **Row-Level Security** - Built-in multi-tenancy
 2. **Real-time subscriptions** - WebSocket support
 3. **Auto-generated API** - PostgREST REST endpoints
 4. **Managed Auth** - No need to implement JWT/sessions
 
 **Trade-offs:**
+
 - ❌ Vendor lock-in
 - ❌ Schema cache issues (we hit this in import upsert)
 - ✅ 80% faster development
@@ -77,12 +81,14 @@ This document explains the technical architecture, design decisions, and pattern
 **Decision:** Use @dnd-kit instead of react-beautiful-dnd
 
 **Rationale:**
+
 1. **Touch Support** - Mobile drag-and-drop works out of the box
 2. **Performance** - Uses transform instead of positional updates
 3. **Accessibility** - Keyboard navigation included
 4. **Active Maintenance** - react-beautiful-dnd is deprecated
 
 **Trade-offs:**
+
 - ❌ More verbose API
 - ❌ Collision detection requires manual setup
 - ✅ 60fps drag performance on mobile
@@ -178,6 +184,7 @@ This document explains the technical architecture, design decisions, and pattern
 ```
 
 **Key Files:**
+
 - [`app/dashboard/page.tsx`](../app/dashboard/page.tsx) - Server Component
 - [`components/DashboardClient.tsx`](../components/DashboardClient.tsx) - Client Component
 - [`lib/supabase-server.ts`](../lib/supabase-server.ts) - SSR client factory
@@ -201,9 +208,11 @@ This document explains the technical architecture, design decisions, and pattern
 ```
 
 **Key Files:**
+
 - [`components/kanban/KanbanBoard.tsx`](../components/kanban/KanbanBoard.tsx) - Lines 119-165
 
 **Why This Pattern?**
+
 - ✅ Instant feedback (0ms perceived latency)
 - ✅ Graceful error handling
 - ❌ Complex state management
@@ -231,10 +240,12 @@ This document explains the technical architecture, design decisions, and pattern
 ```
 
 **Key Files:**
+
 - [`components/leads/FiltersBar.tsx`](../components/leads/FiltersBar.tsx) - Form logic
 - [`app/dashboard/page.tsx`](../app/dashboard/page.tsx) - Lines 18-36 (query building)
 
 **Why URL Sync?**
+
 - ✅ Shareable links with filters
 - ✅ Back button works
 - ✅ Browser history preservation
@@ -263,10 +274,12 @@ This document explains the technical architecture, design decisions, and pattern
 ```
 
 **Key Files:**
+
 - [`app/api/leads/import/route.ts`](../app/api/leads/import/route.ts) - Lines 30-110
 - [`components/leads/ImportLeadsDialog.tsx`](../components/leads/ImportLeadsDialog.tsx) - Upload logic
 
 **Known Issue:**
+
 - ❌ Line 79 sends `updated_at` manually → conflicts with trigger
 - ✅ Fix: Remove `updated_at: new Date().toISOString()` from payload
 
@@ -279,6 +292,7 @@ This document explains the technical architecture, design decisions, and pattern
 We organize files by **feature**, not by **type**.
 
 **Bad (type-based):**
+
 ```
 components/
   kanban-board.tsx
@@ -289,6 +303,7 @@ components/
 ```
 
 **Good (feature-based):**
+
 ```
 components/
   kanban/
@@ -302,20 +317,21 @@ components/
 ```
 
 **Rationale:**
+
 - ✅ Easier to find related files
 - ✅ Can delete entire feature by removing folder
 - ✅ Imports are shorter (`@/components/kanban` instead of `@/components`)
 
 ### Naming Conventions
 
-| File Type | Convention | Example |
-|-----------|------------|---------|
-| React Component | PascalCase | `KanbanBoard.tsx` |
-| Utility Function | camelCase | `formatRelativeTime.ts` |
-| API Route | lowercase | `route.ts` (in /api/leads/) |
-| Test File | .test.tsx | `FiltersBar.test.tsx` |
-| Type Definition | PascalCase | `Lead`, `LeadStatus` |
-| Zod Schema | camelCase + Schema | `leadSchema`, `interactionSchema` |
+| File Type        | Convention         | Example                           |
+| ---------------- | ------------------ | --------------------------------- |
+| React Component  | PascalCase         | `KanbanBoard.tsx`                 |
+| Utility Function | camelCase          | `formatRelativeTime.ts`           |
+| API Route        | lowercase          | `route.ts` (in /api/leads/)       |
+| Test File        | .test.tsx          | `FiltersBar.test.tsx`             |
+| Type Definition  | PascalCase         | `Lead`, `LeadStatus`              |
+| Zod Schema       | camelCase + Schema | `leadSchema`, `interactionSchema` |
 
 ---
 
@@ -345,6 +361,7 @@ USING (auth.uid() = user_id);
 ```
 
 **How it works:**
+
 1. User logs in → JWT token issued with `user_id`
 2. Token stored in HTTP-only cookie
 3. Every Supabase query includes `Authorization: Bearer <token>`
@@ -352,6 +369,7 @@ USING (auth.uid() = user_id);
 5. If policy fails → empty result set (not error)
 
 **Why RLS instead of application-level filtering?**
+
 - ✅ **Defense in depth** - Even if we forget WHERE clause, RLS protects
 - ✅ **Cannot be bypassed** - Runs in database, not application
 - ✅ **Performance** - PostgreSQL optimizes queries with RLS
@@ -382,6 +400,7 @@ USING (auth.uid() = user_id);
 ```
 
 **Key Files:**
+
 - [`middleware.ts`](../middleware.ts) - Route protection
 - [`app/login/page.tsx`](../app/login/page.tsx) - Login UI
 - [`lib/supabase-server.ts`](../lib/supabase-server.ts) - Cookie handling
@@ -395,6 +414,7 @@ USING (auth.uid() = user_id);
 **Decision:** Use React 18 built-in state instead of external library
 
 **Rationale:**
+
 1. **Server Components** - Most state lives on server (initial data)
 2. **Simple State** - Only 2 client-side states: `leads[]` and `editingLead`
 3. **No Global State** - Each page is independent
@@ -413,8 +433,8 @@ const [editingLead, setEditingLead] = useState<Lead | null>(null)
 
 // Child Component (components/kanban/KanbanBoard.tsx)
 // Receives leads as prop, calls onLeadUpdate callback
-<KanbanBoard 
-  leads={leads} 
+<KanbanBoard
+  leads={leads}
   onLeadUpdate={(id, changes) => {
     setLeads(prev => prev.map(l => l.id === id ? {...l, ...changes} : l))
   }}
@@ -422,6 +442,7 @@ const [editingLead, setEditingLead] = useState<Lead | null>(null)
 ```
 
 **When would we need Redux/Zustand?**
+
 - If we had 10+ pages sharing state
 - If we needed time-travel debugging
 - If we had complex async flows with cancellation
@@ -435,6 +456,7 @@ const [editingLead, setEditingLead] = useState<Lead | null>(null)
 **Decision:** Design for mobile first, enhance for desktop
 
 **Implementation:**
+
 ```tsx
 // Mobile: Horizontal scroll
 <div className="flex overflow-x-auto gap-4 pb-4">
@@ -452,6 +474,7 @@ const [editingLead, setEditingLead] = useState<Lead | null>(null)
 ```
 
 **Why Horizontal Scroll?**
+
 - ✅ Natural swipe gesture on mobile
 - ✅ No need to stack columns vertically
 - ✅ Consistent drag-and-drop UX
@@ -472,14 +495,15 @@ const sensors = useSensors(
   }),
   useSensor(TouchSensor, {
     activationConstraint: {
-      delay: 250,      // Long-press to activate
-      tolerance: 5,    // Allow small movements
+      delay: 250, // Long-press to activate
+      tolerance: 5, // Allow small movements
     },
-  })
-)
+  }),
+);
 ```
 
 **User Experience:**
+
 - **Desktop:** Click and drag immediately
 - **Mobile:** Long-press (250ms) then drag
 - **Mobile:** Tap card (no long-press) → opens edit modal
@@ -491,63 +515,78 @@ const sensors = useSensors(
 ### 1. Server Components (40% JS Reduction)
 
 **Before:** All components client-side
+
 ```tsx
 // app/dashboard/page.tsx (old)
-'use client'
+"use client";
 export default function Dashboard() {
-  const [leads, setLeads] = useState([])
-  useEffect(() => { fetch('/api/leads') }, [])
-  return <KanbanBoard leads={leads} />
+  const [leads, setLeads] = useState([]);
+  useEffect(() => {
+    fetch("/api/leads");
+  }, []);
+  return <KanbanBoard leads={leads} />;
 }
 ```
+
 **Bundle size:** 120 KB
 
 **After:** Server Component wrapper
+
 ```tsx
 // app/dashboard/page.tsx (new)
 export default async function Dashboard() {
-  const leads = await getLeads() // Server-side
-  return <DashboardClient initialLeads={leads} />
+  const leads = await getLeads(); // Server-side
+  return <DashboardClient initialLeads={leads} />;
 }
 ```
+
 **Bundle size:** 72 KB (-40%)
 
 ### 2. Optimistic Updates (0ms Perceived Latency)
 
 **Before:** Wait for API response
+
 ```tsx
-await fetch(`/api/leads/${id}`, { method: 'PUT', body: changes })
-setLeads(await fetch('/api/leads')) // Refetch all
+await fetch(`/api/leads/${id}`, { method: "PUT", body: changes });
+setLeads(await fetch("/api/leads")); // Refetch all
 ```
+
 **Perceived latency:** 300-500ms
 
 **After:** Update UI immediately
+
 ```tsx
-setLeads(prev => prev.map(l => l.id === id ? {...l, ...changes} : l))
-fetch(`/api/leads/${id}`, { method: 'PUT', body: changes })
-  .catch(() => setLeads(originalLeads)) // Rollback on error
+setLeads((prev) => prev.map((l) => (l.id === id ? { ...l, ...changes } : l)));
+fetch(`/api/leads/${id}`, { method: "PUT", body: changes }).catch(() =>
+  setLeads(originalLeads),
+); // Rollback on error
 ```
+
 **Perceived latency:** 0ms
 
 ### 3. Debounced Search (90% Fewer API Calls)
 
 **Before:** Search on every keystroke
+
 ```tsx
 <Input onChange={(e) => router.push(`?query=${e.target.value}`)} />
 ```
+
 **API calls for "john":** 4 (j, jo, joh, john)
 
 **After:** Debounce with react-hook-form
+
 ```tsx
-const { watch } = useForm()
+const { watch } = useForm();
 useEffect(() => {
   const subscription = watch((data) => {
-    const timer = setTimeout(() => router.push(`?query=${data.query}`), 300)
-    return () => clearTimeout(timer)
-  })
-  return () => subscription.unsubscribe()
-}, [watch])
+    const timer = setTimeout(() => router.push(`?query=${data.query}`), 300);
+    return () => clearTimeout(timer);
+  });
+  return () => subscription.unsubscribe();
+}, [watch]);
 ```
+
 **API calls for "john":** 1 (after 300ms pause)
 
 ---
@@ -570,20 +609,22 @@ useEffect(() => {
 ```
 
 **Rationale:**
+
 - **Unit tests** are fast, test logic in isolation
 - **API tests** ensure routes work correctly
 - **E2E tests** verify user flows work end-to-end
 
 ### Test Coverage Goals
 
-| Layer | Coverage | Tools |
-|-------|----------|-------|
-| Utils (lib/) | 90% | Vitest |
-| Components | 70% | Vitest + Testing Library |
-| API Routes | 80% | Vitest + Supertest |
-| E2E Flows | 5 critical paths | Playwright |
+| Layer        | Coverage         | Tools                    |
+| ------------ | ---------------- | ------------------------ |
+| Utils (lib/) | 90%              | Vitest                   |
+| Components   | 70%              | Vitest + Testing Library |
+| API Routes   | 80%              | Vitest + Supertest       |
+| E2E Flows    | 5 critical paths | Playwright               |
 
 **Not tested:**
+
 - UI styling (too brittle)
 - Third-party libraries (@dnd-kit, shadcn/ui)
 - Supabase client (mocked in tests)
@@ -595,13 +636,16 @@ useEffect(() => {
 ### Planned Improvements
 
 1. **Real-time Subscriptions**
+
    ```typescript
    supabase
-     .channel('leads')
-     .on('postgres_changes', { event: '*', schema: 'public', table: 'leads' }, 
-       (payload) => setLeads(prev => [...prev, payload.new])
+     .channel("leads")
+     .on(
+       "postgres_changes",
+       { event: "*", schema: "public", table: "leads" },
+       (payload) => setLeads((prev) => [...prev, payload.new]),
      )
-     .subscribe()
+     .subscribe();
    ```
 
 2. **Persistent D&D Order**

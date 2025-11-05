@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState } from "react";
 import {
   DndContext,
   DragEndEvent,
@@ -12,44 +12,48 @@ import {
   useSensors,
   DragOverEvent,
   closestCorners,
-} from '@dnd-kit/core'
-import { arrayMove } from '@dnd-kit/sortable'
-import { LeadStatus } from '@/lib/zod-schemas'
-import { LeadCard } from './LeadCard'
-import { KanbanColumn } from './KanbanColumn'
+} from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
+import { LeadStatus } from "@/lib/zod-schemas";
+import { LeadCard } from "./LeadCard";
+import { KanbanColumn } from "./KanbanColumn";
 
 export interface Lead {
-  id: string
-  name: string
-  email?: string
-  phone?: string
-  company?: string
-  status: LeadStatus
-  notes?: string
-  source?: string
-  created_at: string
-  updated_at: string
-  user_id: string
+  id: string;
+  name: string;
+  email?: string;
+  phone?: string;
+  company?: string;
+  status: LeadStatus;
+  notes?: string;
+  source?: string;
+  created_at: string;
+  updated_at: string;
+  user_id: string;
 }
 
 interface KanbanBoardProps {
-  leads: Lead[]
-  onStatusChange: (leadId: string, newStatus: LeadStatus) => Promise<void>
-  onLeadClick: (leadId: string) => void
+  leads: Lead[];
+  onStatusChange: (leadId: string, newStatus: LeadStatus) => Promise<void>;
+  onLeadClick: (leadId: string) => void;
 }
 
 const columns: { id: LeadStatus; title: string }[] = [
-  { id: 'new', title: 'New' },
-  { id: 'contacted', title: 'Contacted' },
-  { id: 'qualified', title: 'Qualified' },
-  { id: 'pending', title: 'Pending' },
-  { id: 'lost', title: 'Lost' },
-]
+  { id: "new", title: "New" },
+  { id: "contacted", title: "Contacted" },
+  { id: "qualified", title: "Qualified" },
+  { id: "pending", title: "Pending" },
+  { id: "lost", title: "Lost" },
+];
 
-export function KanbanBoard({ leads, onStatusChange, onLeadClick }: KanbanBoardProps) {
-  const [activeId, setActiveId] = useState<string | null>(null)
-  const [localLeads, setLocalLeads] = useState<Lead[]>(leads)
-  
+export function KanbanBoard({
+  leads,
+  onStatusChange,
+  onLeadClick,
+}: KanbanBoardProps) {
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [localLeads, setLocalLeads] = useState<Lead[]>(leads);
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -61,13 +65,13 @@ export function KanbanBoard({ leads, onStatusChange, onLeadClick }: KanbanBoardP
         delay: 200,
         tolerance: 8,
       },
-    })
-  )
+    }),
+  );
 
   // Update local leads when props change
   useMemo(() => {
-    setLocalLeads(leads)
-  }, [leads])
+    setLocalLeads(leads);
+  }, [leads]);
 
   const leadsByStatus = useMemo(() => {
     const grouped: Record<LeadStatus, Lead[]> = {
@@ -76,86 +80,95 @@ export function KanbanBoard({ leads, onStatusChange, onLeadClick }: KanbanBoardP
       qualified: [],
       pending: [],
       lost: [],
-    }
+    };
 
     localLeads.forEach((lead) => {
       if (grouped[lead.status]) {
-        grouped[lead.status].push(lead)
+        grouped[lead.status].push(lead);
       }
-    })
+    });
 
-    return grouped
-  }, [localLeads])
+    return grouped;
+  }, [localLeads]);
 
   const activeLead = useMemo(() => {
-    if (!activeId) return null
-    return localLeads.find((lead) => lead.id === activeId)
-  }, [activeId, localLeads])
+    if (!activeId) return null;
+    return localLeads.find((lead) => lead.id === activeId);
+  }, [activeId, localLeads]);
 
   const handleDragStart = (event: DragStartEvent) => {
-    setActiveId(event.active.id as string)
-  }
+    setActiveId(event.active.id as string);
+  };
 
   const handleDragOver = (event: DragOverEvent) => {
-    const { active, over } = event
-    if (!over) return
+    const { active, over } = event;
+    if (!over) return;
 
-    const activeId = active.id as string
-    const overId = over.id as string
+    const activeId = active.id as string;
+    const overId = over.id as string;
 
-    if (activeId === overId) return
+    if (activeId === overId) return;
 
-    const activeLead = localLeads.find((l) => l.id === activeId)
-    const overLead = localLeads.find((l) => l.id === overId)
+    const activeLead = localLeads.find((l) => l.id === activeId);
+    const overLead = localLeads.find((l) => l.id === overId);
 
-    if (!activeLead) return
+    if (!activeLead) return;
 
     // If dragging over another lead (reordering within or between columns)
     if (overLead) {
-      const activeIndex = localLeads.findIndex((l) => l.id === activeId)
-      const overIndex = localLeads.findIndex((l) => l.id === overId)
+      const activeIndex = localLeads.findIndex((l) => l.id === activeId);
+      const overIndex = localLeads.findIndex((l) => l.id === overId);
 
       if (activeIndex !== overIndex) {
         setLocalLeads((leads) => {
-          const newLeads = arrayMove(leads, activeIndex, overIndex)
+          const newLeads = arrayMove(leads, activeIndex, overIndex);
           // Update the status if moved to different column
           if (activeLead.status !== overLead.status) {
-            newLeads[overIndex] = { ...newLeads[overIndex], status: overLead.status }
+            newLeads[overIndex] = {
+              ...newLeads[overIndex],
+              status: overLead.status,
+            };
           }
-          return newLeads
-        })
+          return newLeads;
+        });
       }
     }
-  }
+  };
 
   const handleDragEnd = async (event: DragEndEvent) => {
-    const { active, over } = event
-    setActiveId(null)
+    const { active, over } = event;
+    setActiveId(null);
 
-    if (!over) return
+    if (!over) return;
 
-    const leadId = active.id as string
-    const overId = over.id as string
+    const leadId = active.id as string;
+    const overId = over.id as string;
 
-    const lead = localLeads.find((l) => l.id === leadId)
-    if (!lead) return
+    const lead = localLeads.find((l) => l.id === leadId);
+    if (!lead) return;
 
     // Check if dropped over a valid column
-    const validStatuses: LeadStatus[] = ['new', 'contacted', 'qualified', 'pending', 'lost']
+    const validStatuses: LeadStatus[] = [
+      "new",
+      "contacted",
+      "qualified",
+      "pending",
+      "lost",
+    ];
     if (validStatuses.includes(overId as LeadStatus)) {
       // Dropped directly on a column
-      const newStatus = overId as LeadStatus
+      const newStatus = overId as LeadStatus;
       if (lead.status !== newStatus) {
-        await onStatusChange(leadId, newStatus)
+        await onStatusChange(leadId, newStatus);
       }
     } else {
       // Dropped over a card
-      const targetLead = localLeads.find((l) => l.id === overId)
+      const targetLead = localLeads.find((l) => l.id === overId);
       if (targetLead && lead.status !== targetLead.status) {
-        await onStatusChange(leadId, targetLead.status)
+        await onStatusChange(leadId, targetLead.status);
       }
     }
-  }
+  };
 
   return (
     <DndContext
@@ -184,5 +197,5 @@ export function KanbanBoard({ leads, onStatusChange, onLeadClick }: KanbanBoardP
         )}
       </DragOverlay>
     </DndContext>
-  )
+  );
 }

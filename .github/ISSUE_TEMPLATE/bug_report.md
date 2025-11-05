@@ -1,9 +1,9 @@
 ---
 name: Bug Report
 about: Report a bug to help us improve
-title: '[BUG] '
+title: "[BUG] "
 labels: bug
-assignees: ''
+assignees: ""
 ---
 
 ## 🐛 Bug Description
@@ -16,13 +16,14 @@ assignees: ''
 
 **File:** `path/to/file.tsx`  
 **Line:** (if known)  
-**Component/Function:** 
+**Component/Function:**
 
 ---
 
 ## 🔴 Priority
 
 <!-- Select one -->
+
 - [ ] **P-0 - Critical** (App crashes, data loss, security issue)
 - [ ] **P-1 - High** (Major feature broken, bad UX)
 - [ ] **P-2 - Medium** (Minor feature issue, workaround exists)
@@ -43,30 +44,27 @@ assignees: ''
 
 <!-- What should happen -->
 
-
 ---
 
 ## 🔧 Actual Behavior
 
 <!-- What actually happens -->
 
-
 ---
 
 ## 🖥️ Environment
 
 **Browser:** Chrome / Firefox / Safari / Edge  
-**Version:** 
+**Version:**
 **OS:** Windows / macOS / Linux / iOS / Android  
 **Device:** Desktop / Mobile / Tablet  
-**Screen Size:** 
+**Screen Size:**
 
 ---
 
 ## 📸 Screenshots/Videos
 
 <!-- Add screenshots or recordings showing the bug -->
-
 
 ---
 
@@ -112,13 +110,11 @@ Paste network errors here
 
 <!-- Optional: Suggest a fix if you have an idea -->
 
-
 ---
 
 ## 📝 Additional Context
 
 <!-- Any other information about the bug -->
-
 
 ---
 

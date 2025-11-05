@@ -2,9 +2,9 @@
 const nextConfig = {
   experimental: {
     serverActions: {
-      allowedOrigins: ['*']
-    }
-  }
-}
+      allowedOrigins: ["*"],
+    },
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

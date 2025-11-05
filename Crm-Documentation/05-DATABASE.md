@@ -141,6 +141,7 @@ CREATE INDEX idx_leads_user_status ON leads(user_id, status);
 Creates tables, RLS policies, and triggers.
 
 **Run in Supabase SQL Editor:**
+
 ```bash
 cat supabase/migrations/0001_initial_schema.sql
 # Copy and paste into Supabase dashboard
@@ -163,7 +164,7 @@ ALTER TABLE leads ADD COLUMN position INT DEFAULT 0;
 
 -- Set initial positions
 WITH numbered AS (
-  SELECT 
+  SELECT
     id,
     ROW_NUMBER() OVER (PARTITION BY user_id, status ORDER BY created_at DESC) as pos
   FROM leads
@@ -220,7 +221,7 @@ ORDER BY created_at DESC;
 ### Get Lead with Interactions
 
 ```sql
-SELECT 
+SELECT
   l.*,
   json_agg(i.*) AS interactions
 FROM leads l
@@ -233,7 +234,7 @@ GROUP BY l.id;
 ### Count Leads by Status
 
 ```sql
-SELECT 
+SELECT
   status,
   COUNT(*) as count
 FROM leads

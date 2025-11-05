@@ -1,16 +1,16 @@
-'use client'
+"use client";
 
-import { useSortable } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
-import { Card, CardContent } from '@/components/ui/card'
-import { Lead } from './KanbanBoard'
-import { Building2, Mail, Phone, Clock } from 'lucide-react'
-import { formatRelativeTime } from '@/lib/utils'
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { Card, CardContent } from "@/components/ui/card";
+import { Lead } from "./KanbanBoard";
+import { Building2, Mail, Phone, Clock } from "lucide-react";
+import { formatRelativeTime } from "@/lib/utils";
 
 interface LeadCardProps {
-  lead: Lead
-  onClick: () => void
-  isDragging?: boolean
+  lead: Lead;
+  onClick: () => void;
+  isDragging?: boolean;
 }
 
 export function LeadCard({ lead, onClick, isDragging }: LeadCardProps) {
@@ -21,21 +21,21 @@ export function LeadCard({ lead, onClick, isDragging }: LeadCardProps) {
     transform,
     transition,
     isDragging: isSortableDragging,
-  } = useSortable({ id: lead.id })
+  } = useSortable({ id: lead.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isSortableDragging ? 0.5 : 1,
-  }
+  };
 
   // Handle click with delay to differentiate from drag
   const handleClick = () => {
     // Only trigger on single click, not during drag
     if (!isSortableDragging) {
-      onClick()
+      onClick();
     }
-  }
+  };
 
   return (
     <Card
@@ -44,7 +44,7 @@ export function LeadCard({ lead, onClick, isDragging }: LeadCardProps) {
       {...attributes}
       {...listeners}
       className={`cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow ${
-        isDragging ? 'shadow-lg rotate-3' : ''
+        isDragging ? "shadow-lg rotate-3" : ""
       }`}
       onClick={handleClick}
     >
@@ -83,5 +83,5 @@ export function LeadCard({ lead, onClick, isDragging }: LeadCardProps) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

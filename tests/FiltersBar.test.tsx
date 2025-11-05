@@ -1,38 +1,52 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
-import { FiltersBar } from '@/components/leads/FiltersBar'
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { FiltersBar } from "@/components/leads/FiltersBar";
 
 // Mock next/navigation
-const mockReplace = vi.fn()
-const mockSearchParams = new URLSearchParams()
+const mockReplace = vi.fn();
+const mockSearchParams = new URLSearchParams();
 
-vi.mock('next/navigation', () => ({
+vi.mock("next/navigation", () => ({
   useRouter: () => ({
     replace: mockReplace,
   }),
   useSearchParams: () => mockSearchParams,
-}))
+}));
 
-describe('FiltersBar', () => {
+describe("FiltersBar", () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-  })
+    vi.clearAllMocks();
+  });
 
-  it('should call router.replace on search', async () => {
-    render(<FiltersBar />)
-    
-    const searchButton = screen.getByRole('button', { name: /search/i })
-    fireEvent.click(searchButton)
+  it("should call router.replace on search", async () => {
+    render(<FiltersBar />);
 
-    expect(mockReplace).toHaveBeenCalled()
-  })
+    // Wait for client-side hydration
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /search/i })).toBeInTheDocument();
+    });
 
-  it('should call router.replace on clear', () => {
-    render(<FiltersBar />)
-    
-    const clearButton = screen.getByRole('button', { name: /clear/i })
-    fireEvent.click(clearButton)
+    const searchButton = screen.getByRole("button", { name: /search/i });
+    fireEvent.click(searchButton);
 
-    expect(mockReplace).toHaveBeenCalledWith('/dashboard')
-  })
-})
+    await waitFor(() => {
+      expect(mockReplace).toHaveBeenCalled();
+    });
+  });
+
+  it("should call router.replace on clear", async () => {
+    render(<FiltersBar />);
+
+    // Wait for client-side hydration
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /clear/i })).toBeInTheDocument();
+    });
+
+    const clearButton = screen.getByRole("button", { name: /clear/i });
+    fireEvent.click(clearButton);
+
+    await waitFor(() => {
+      expect(mockReplace).toHaveBeenCalledWith("/dashboard");
+    });
+  });
+});

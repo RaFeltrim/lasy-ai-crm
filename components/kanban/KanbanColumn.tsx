@@ -1,26 +1,34 @@
-'use client'
+"use client";
 
-import { useDroppable } from '@dnd-kit/core'
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Lead } from './KanbanBoard'
-import { LeadCard } from './LeadCard'
+import { useDroppable } from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Lead } from "./KanbanBoard";
+import { LeadCard } from "./LeadCard";
 
 interface KanbanColumnProps {
-  id: string
-  title: string
-  leads: Lead[]
-  onLeadClick: (leadId: string) => void
+  id: string;
+  title: string;
+  leads: Lead[];
+  onLeadClick: (leadId: string) => void;
 }
 
-export function KanbanColumn({ id, title, leads = [], onLeadClick }: KanbanColumnProps) {
-  const { setNodeRef, isOver } = useDroppable({ id })
+export function KanbanColumn({
+  id,
+  title,
+  leads = [],
+  onLeadClick,
+}: KanbanColumnProps) {
+  const { setNodeRef, isOver } = useDroppable({ id });
 
   return (
     <Card
       ref={setNodeRef}
       className={`flex flex-col h-[400px] lg:h-[calc(100vh-250px)] min-w-[300px] flex-shrink-0 lg:min-w-0 lg:flex-shrink transition-colors ${
-        isOver ? 'border-primary' : ''
+        isOver ? "border-primary" : ""
       }`}
     >
       <CardHeader className="pb-3">
@@ -49,5 +57,5 @@ export function KanbanColumn({ id, title, leads = [], onLeadClick }: KanbanColum
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

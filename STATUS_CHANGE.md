@@ -5,6 +5,7 @@
 The lead status values were updated to better reflect the sales pipeline workflow.
 
 ### Old Status Values (Original)
+
 1. `new` - New leads
 2. `qualified` - Qualified leads
 3. `proposal` - Proposal sent
@@ -12,6 +13,7 @@ The lead status values were updated to better reflect the sales pipeline workflo
 5. `lost` - Deal lost
 
 ### New Status Values (Current)
+
 1. `new` - New leads
 2. `contacted` - Initial contact made
 3. `qualified` - Lead qualified
@@ -21,6 +23,7 @@ The lead status values were updated to better reflect the sales pipeline workflo
 ## Why the Change?
 
 The new pipeline is more aligned with typical CRM workflows:
+
 - **contacted**: Tracks when first contact is made
 - **pending**: Useful for leads awaiting decisions or next steps
 - Removed `proposal` and `won` which were less commonly used
@@ -34,13 +37,14 @@ DROP CONSTRAINT leads_status_check;
 
 -- 2. Add new constraint
 ALTER TABLE leads
-ADD CONSTRAINT leads_status_check 
+ADD CONSTRAINT leads_status_check
 CHECK (status IN ('new', 'contacted', 'qualified', 'pending', 'lost'));
 ```
 
 ## Code Changes Made
 
 ✅ Updated files:
+
 - [`lib/zod-schemas.ts`](lib/zod-schemas.ts) - Zod enum updated
 - [`components/kanban/KanbanBoard.tsx`](components/kanban/KanbanBoard.tsx) - Kanban columns updated
 - [`app/leads/new/page.tsx`](app/leads/new/page.tsx) - Form select options updated
@@ -67,6 +71,7 @@ The dashboard now shows 5 columns:
 ## Testing
 
 After these changes, you can:
+
 1. ✅ Create leads with any of the 5 new status values
 2. ✅ Drag leads between columns in the Kanban board
 3. ✅ Filter by status in the filters bar
@@ -85,7 +90,7 @@ To revert to old status values:
 
 ```sql
 ALTER TABLE leads DROP CONSTRAINT leads_status_check;
-ALTER TABLE leads ADD CONSTRAINT leads_status_check 
+ALTER TABLE leads ADD CONSTRAINT leads_status_check
 CHECK (status IN ('new', 'qualified', 'proposal', 'won', 'lost'));
 ```
 

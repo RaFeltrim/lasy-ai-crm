@@ -15,12 +15,12 @@ Metrics, benchmarks, and optimization techniques.
 
 ### Core Web Vitals
 
-| Metric | Value | Status |
-|--------|-------|--------|
-| LCP (Largest Contentful Paint) | 1.2s | ✅ Good |
-| FID (First Input Delay) | 45ms | ✅ Good |
-| CLS (Cumulative Layout Shift) | 0.05 | ✅ Good |
-| TTFB (Time to First Byte) | 300ms | ✅ Good |
+| Metric                         | Value | Status  |
+| ------------------------------ | ----- | ------- |
+| LCP (Largest Contentful Paint) | 1.2s  | ✅ Good |
+| FID (First Input Delay)        | 45ms  | ✅ Good |
+| CLS (Cumulative Layout Shift)  | 0.05  | ✅ Good |
+| TTFB (Time to First Byte)      | 300ms | ✅ Good |
 
 ### Bundle Size
 
@@ -42,26 +42,32 @@ Server: 0 KB (Server Components don't ship to client)
 ### 1. Server Components (40% Reduction)
 
 **Before:**
+
 ```tsx
-'use client'
+"use client";
 export default function Dashboard() {
-  const [leads, setLeads] = useState([])
+  const [leads, setLeads] = useState([]);
   useEffect(() => {
-    fetch('/api/leads').then(r => r.json()).then(setLeads)
-  }, [])
-  return <KanbanBoard leads={leads} />
+    fetch("/api/leads")
+      .then((r) => r.json())
+      .then(setLeads);
+  }, []);
+  return <KanbanBoard leads={leads} />;
 }
 ```
+
 Bundle: 120 KB
 
 **After:**
+
 ```tsx
 // Server Component
 export default async function Dashboard() {
-  const leads = await getLeads()
-  return <DashboardClient initialLeads={leads} />
+  const leads = await getLeads();
+  return <DashboardClient initialLeads={leads} />;
 }
 ```
+
 Bundle: 72 KB (-40%)
 
 ---
@@ -69,19 +75,24 @@ Bundle: 72 KB (-40%)
 ### 2. Optimistic Updates (0ms Perceived Latency)
 
 **Before:**
+
 ```tsx
-await updateLead(id, changes)
-const newLeads = await fetchLeads()
-setLeads(newLeads)
+await updateLead(id, changes);
+const newLeads = await fetchLeads();
+setLeads(newLeads);
 ```
+
 Perceived latency: 500ms
 
 **After:**
+
 ```tsx
-setLeads(prev => prev.map(l => l.id === id ? {...l, ...changes} : l))
-fetch(`/api/leads/${id}`, { method: 'PUT', body: changes })
-  .catch(() => setLeads(originalLeads))
+setLeads((prev) => prev.map((l) => (l.id === id ? { ...l, ...changes } : l)));
+fetch(`/api/leads/${id}`, { method: "PUT", body: changes }).catch(() =>
+  setLeads(originalLeads),
+);
 ```
+
 Perceived latency: 0ms
 
 ---
@@ -89,12 +100,14 @@ Perceived latency: 0ms
 ### 3. Database Indexes (70% Faster Queries)
 
 **Before:** Table scan
+
 ```sql
 SELECT * FROM leads WHERE user_id = 'xxx' AND status = 'qualified';
 -- Execution time: 250ms
 ```
 
 **After:** Index scan
+
 ```sql
 CREATE INDEX idx_leads_user_status ON leads(user_id, status);
 -- Execution time: 75ms (-70%)
@@ -106,9 +119,9 @@ CREATE INDEX idx_leads_user_status ON leads(user_id, status);
 
 ```tsx
 // Heavy component loaded on demand
-const ImportDialog = dynamic(() => import('./ImportLeadsDialog'), {
+const ImportDialog = dynamic(() => import("./ImportLeadsDialog"), {
   loading: () => <Skeleton className="h-10 w-32" />,
-})
+});
 ```
 
 **Savings:** 25 KB not loaded until user clicks Import
@@ -122,8 +135,8 @@ const ImportDialog = dynamic(() => import('./ImportLeadsDialog'), {
 ```typescript
 // lib/analytics.ts
 export function measurePageLoad() {
-  if (typeof window !== 'undefined') {
-    const perfData = window.performance.getEntriesByType('navigation')[0]
+  if (typeof window !== "undefined") {
+    const perfData = window.performance.getEntriesByType("navigation")[0];
     console.log({
       dns: perfData.domainLookupEnd - perfData.domainLookupStart,
       tcp: perfData.connectEnd - perfData.connectStart,
@@ -131,7 +144,7 @@ export function measurePageLoad() {
       download: perfData.responseEnd - perfData.responseStart,
       domInteractive: perfData.domInteractive,
       domComplete: perfData.domComplete,
-    })
+    });
   }
 }
 ```
@@ -141,13 +154,13 @@ export function measurePageLoad() {
 ```typescript
 // middleware.ts
 export function middleware(request: NextRequest) {
-  const start = Date.now()
-  
+  const start = Date.now();
+
   return NextResponse.next({
     headers: {
-      'X-Response-Time': `${Date.now() - start}ms`
-    }
-  })
+      "X-Response-Time": `${Date.now() - start}ms`,
+    },
+  });
 }
 ```
 
@@ -158,40 +171,41 @@ export function middleware(request: NextRequest) {
 ### High Priority
 
 **1. Add Virtual Scrolling for Large Lists**
+
 ```bash
 npm install react-window
 ```
 
 ```tsx
-import { FixedSizeList } from 'react-window'
+import { FixedSizeList } from "react-window";
 
-<FixedSizeList
-  height={600}
-  itemCount={leads.length}
-  itemSize={100}
->
+<FixedSizeList height={600} itemCount={leads.length} itemSize={100}>
   {({ index, style }) => (
     <div style={style}>
       <LeadCard lead={leads[index]} />
     </div>
   )}
-</FixedSizeList>
+</FixedSizeList>;
 ```
+
 **Impact:** Handle 10,000+ leads without lag
 
 **2. Implement Query Pagination**
+
 ```typescript
 const { data: leads } = await supabase
-  .from('leads')
-  .select('*')
+  .from("leads")
+  .select("*")
   .range(0, 49) // First 50 results
-  .order('created_at', { ascending: false })
+  .order("created_at", { ascending: false });
 ```
+
 **Impact:** 80% faster initial load
 
 **3. Add Image Optimization**
+
 ```tsx
-import Image from 'next/image'
+import Image from "next/image";
 
 <Image
   src="/avatar.jpg"
@@ -199,31 +213,34 @@ import Image from 'next/image'
   height={40}
   alt="Avatar"
   priority // For above-the-fold images
-/>
+/>;
 ```
 
 ### Medium Priority
 
 **4. Enable Compression**
+
 ```typescript
 // next.config.js
 module.exports = {
   compress: true, // Gzip compression
-}
+};
 ```
 
 **5. Add Service Worker for Offline Support**
+
 ```bash
 npm install next-pwa
 ```
 
 **6. Implement Request Deduplication**
-```typescript
-import useSWR from 'swr'
 
-const { data: leads } = useSWR('/api/leads', fetcher, {
+```typescript
+import useSWR from "swr";
+
+const { data: leads } = useSWR("/api/leads", fetcher, {
   dedupingInterval: 2000, // Don't refetch within 2s
-})
+});
 ```
 
 ---
@@ -237,6 +254,7 @@ ab -n 1000 -c 10 http://localhost:3000/api/leads
 ```
 
 **Results:**
+
 - **Requests:** 1000
 - **Concurrency:** 10
 - **Time taken:** 12.5s
@@ -258,7 +276,7 @@ ab -n 1000 -c 10 http://localhost:3000/api/leads
 ALTER DATABASE postgres SET log_min_duration_statement = 100;
 
 -- Check slow queries
-SELECT 
+SELECT
   query,
   calls,
   total_time,
@@ -271,6 +289,7 @@ LIMIT 10;
 ### Common Slow Queries
 
 **1. Full-text search without index**
+
 ```sql
 -- Slow (250ms)
 SELECT * FROM leads WHERE notes ILIKE '%keyword%';
@@ -281,6 +300,7 @@ SELECT * FROM leads WHERE to_tsvector('english', notes) @@ to_tsquery('keyword')
 ```
 
 **2. Unindexed JOIN**
+
 ```sql
 -- Slow (180ms)
 SELECT l.*, i.* FROM leads l

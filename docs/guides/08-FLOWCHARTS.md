@@ -162,6 +162,7 @@ graph LR
 ```
 
 **Status Meanings:**
+
 - **New:** Just imported/created
 - **Contacted:** First outreach made
 - **Qualified:** Met criteria (budget, authority, need, timeline)

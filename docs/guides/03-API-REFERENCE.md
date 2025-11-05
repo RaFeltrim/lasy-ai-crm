@@ -16,6 +16,7 @@ https://your-domain.com/api (Production)
 All endpoints require authentication via Supabase JWT cookie.
 
 **Unauthorized Response:**
+
 ```json
 {
   "error": "Unauthorized"
@@ -31,11 +32,13 @@ All endpoints require authentication via Supabase JWT cookie.
 Get all leads for authenticated user.
 
 **Headers:**
+
 ```
 Cookie: sb-access-token=<jwt>
 ```
 
 **Response 200:**
+
 ```json
 [
   {
@@ -61,6 +64,7 @@ Cookie: sb-access-token=<jwt>
 Create a new lead.
 
 **Request:**
+
 ```json
 {
   "name": "Jane Smith",
@@ -74,11 +78,13 @@ Create a new lead.
 ```
 
 **Validation:**
+
 - `name`: Required, min 1 char
 - `email`: Required, valid email format
 - `status`: Must be: new, contacted, qualified, customer, lost
 
 **Response 200:**
+
 ```json
 {
   "id": "new-uuid",
@@ -90,6 +96,7 @@ Create a new lead.
 ```
 
 **Response 400:**
+
 ```json
 {
   "error": "Invalid email format"
@@ -103,9 +110,11 @@ Create a new lead.
 Get single lead by ID.
 
 **Parameters:**
+
 - `id`: Lead UUID
 
 **Response 200:**
+
 ```json
 {
   "id": "lead-uuid",
@@ -115,6 +124,7 @@ Get single lead by ID.
 ```
 
 **Response 404:**
+
 ```json
 {
   "error": "Lead not found"
@@ -128,6 +138,7 @@ Get single lead by ID.
 Update existing lead.
 
 **Request:**
+
 ```json
 {
   "status": "qualified",
@@ -138,6 +149,7 @@ Update existing lead.
 **Note:** Don't send `updated_at` - handled by database trigger.
 
 **Response 200:**
+
 ```json
 {
   "id": "lead-uuid",
@@ -153,6 +165,7 @@ Update existing lead.
 Delete lead.
 
 **Response 200:**
+
 ```json
 {
   "message": "Lead deleted successfully"
@@ -168,6 +181,7 @@ Delete lead.
 Import leads from CSV/XLSX.
 
 **Request:**
+
 ```json
 {
   "file": "base64-encoded-file-content",
@@ -176,26 +190,26 @@ Import leads from CSV/XLSX.
 ```
 
 **Response 200:**
+
 ```json
 {
   "message": "Leads: 10 new, 5 updated, 2 rejected",
   "inserted": 10,
   "updated": 5,
   "rejected": 2,
-  "errors": [
-    "Row 3: Invalid email format",
-    "Row 7: Name is required"
-  ]
+  "errors": ["Row 3: Invalid email format", "Row 7: Name is required"]
 }
 ```
 
 **CSV Format:**
+
 ```csv
 name,email,phone,company,status,source,notes
 John Doe,john@example.com,+1234567890,Acme,new,website,Note
 ```
 
 **Upsert Logic:**
+
 - Check if lead exists by `email`
 - If exists → UPDATE
 - If new → INSERT
@@ -207,9 +221,11 @@ John Doe,john@example.com,+1234567890,Acme,new,website,Note
 Export leads to XLSX.
 
 **Query Parameters:**
+
 - `format`: "xlsx" or "csv" (default: "xlsx")
 
 **Response 200:**
+
 ```
 Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 Content-Disposition: attachment; filename="leads-2025-01-17.xlsx"
@@ -218,6 +234,7 @@ Content-Disposition: attachment; filename="leads-2025-01-17.xlsx"
 ```
 
 **Response 400:**
+
 ```json
 {
   "error": "Invalid format"
@@ -233,9 +250,11 @@ Content-Disposition: attachment; filename="leads-2025-01-17.xlsx"
 Get all interactions for a lead.
 
 **Query Parameters:**
+
 - `leadId`: Lead UUID (required)
 
 **Response 200:**
+
 ```json
 [
   {
@@ -256,6 +275,7 @@ Get all interactions for a lead.
 Create interaction for a lead.
 
 **Request:**
+
 ```json
 {
   "lead_id": "lead-uuid",
@@ -265,9 +285,11 @@ Create interaction for a lead.
 ```
 
 **Validation:**
+
 - `type`: Must be: call, email, meeting, note
 
 **Response 200:**
+
 ```json
 {
   "id": "new-uuid",
@@ -280,6 +302,7 @@ Create interaction for a lead.
 ## Error Responses
 
 ### 400 Bad Request
+
 ```json
 {
   "error": "Validation error",
@@ -291,6 +314,7 @@ Create interaction for a lead.
 ```
 
 ### 401 Unauthorized
+
 ```json
 {
   "error": "Unauthorized"
@@ -298,6 +322,7 @@ Create interaction for a lead.
 ```
 
 ### 403 Forbidden
+
 ```json
 {
   "error": "Access denied"
@@ -305,6 +330,7 @@ Create interaction for a lead.
 ```
 
 ### 404 Not Found
+
 ```json
 {
   "error": "Resource not found"
@@ -312,6 +338,7 @@ Create interaction for a lead.
 ```
 
 ### 500 Internal Server Error
+
 ```json
 {
   "error": "Internal server error",

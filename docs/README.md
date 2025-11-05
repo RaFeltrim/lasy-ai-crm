@@ -5,12 +5,14 @@ Welcome to the comprehensive documentation for Lasy CRM. This documentation is o
 ## 📚 Documentation Structure
 
 ### 🚀 Setup Guides (`docs/setup/`)
+
 Step-by-step guides for getting started with the application:
 
 - **[Authentication Guide](setup/AUTHENTICATION.md)** - User registration, login, and authentication flow
 - **[Supabase Setup](setup/SUPABASE_SETUP.md)** - Database configuration and setup instructions
 
 ### 📖 User & Developer Guides (`docs/guides/`)
+
 Comprehensive guides for using and developing Lasy CRM:
 
 1. **[Getting Started](guides/01-GETTING-STARTED.md)** - Installation and initial setup
@@ -27,10 +29,12 @@ Comprehensive guides for using and developing Lasy CRM:
 12. **[Contributing](guides/12-CONTRIBUTING.md)** - Contribution guidelines
 
 **Additional Resources:**
+
 - **[Quick Reference](guides/QUICK-REFERENCE.md)** - Quick command and API reference
 - **[AI Assistant Guide](guides/AI-ASSISTANT-GUIDE.md)** - Guide for AI assistants working with this codebase
 
 ### 🔧 Fix Documentation (`docs/fixes/`)
+
 Historical documentation of bugs and their fixes:
 
 - **[Critical Patch](fixes/CRITICAL_PATCH.md)** - Hydration and validation fixes
@@ -45,29 +49,34 @@ Historical documentation of bugs and their fixes:
 ## 🎯 Quick Links
 
 ### For New Users
+
 1. Start with [Getting Started](guides/01-GETTING-STARTED.md)
 2. Set up [Authentication](setup/AUTHENTICATION.md)
 3. Configure [Supabase](setup/SUPABASE_SETUP.md)
 4. Check [Quick Reference](guides/QUICK-REFERENCE.md) for common commands
 
 ### For Developers
+
 1. Review [Architecture](guides/02-ARCHITECTURE.md)
 2. Study [Components](guides/04-COMPONENTS.md) and [API Reference](guides/03-API-REFERENCE.md)
 3. Read [Contributing Guidelines](guides/12-CONTRIBUTING.md)
 4. Check [AI Assistant Guide](guides/AI-ASSISTANT-GUIDE.md) if you're an AI
 
 ### For Troubleshooting
+
 1. Check [Troubleshooting Guide](guides/09-TROUBLESHOOTING.md)
 2. Review [Bugs and Fixes](guides/06-BUGS-AND-FIXES.md)
 3. Browse historical fixes in `docs/fixes/` folder
 
 ### For Deployment
+
 1. Read [Deployment Guide](guides/11-DEPLOYMENT.md)
 2. Review [Performance Best Practices](guides/10-PERFORMANCE.md)
 
 ## 📝 Contributing to Documentation
 
 When adding new documentation:
+
 - Place setup guides in `docs/setup/`
 - Place user/developer guides in `docs/guides/`
 - Place bug fix documentation in `docs/fixes/`

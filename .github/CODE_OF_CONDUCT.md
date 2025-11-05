@@ -150,12 +150,12 @@ Use emojis to convey tone and soften feedback:
 
 ### Response Times
 
-| Priority | First Response | Complete Review |
-|----------|----------------|-----------------|
-| **P-0 (Critical)** | 4 hours | 1 day |
-| **P-1 (High)** | 1 day | 2 days |
-| **P-2 (Medium)** | 2 days | 5 days |
-| **P-3 (Low)** | 3 days | 1 week |
+| Priority           | First Response | Complete Review |
+| ------------------ | -------------- | --------------- |
+| **P-0 (Critical)** | 4 hours        | 1 day           |
+| **P-1 (High)**     | 1 day          | 2 days          |
+| **P-2 (Medium)**   | 2 days         | 5 days          |
+| **P-3 (Low)**      | 3 days         | 1 week          |
 
 **Note:** "First response" means acknowledging the PR, even if full review comes later.
 

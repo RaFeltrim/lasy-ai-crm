@@ -11,6 +11,7 @@
 Copy and paste the contents of `supabase/migrations/0001_initial_schema.sql` and click **Run**.
 
 This will create:
+
 - Extensions (uuid-ossp)
 - Enums (lead_status, interaction_type)
 - Tables (profiles, leads, interactions)
@@ -63,20 +64,24 @@ If you want to populate the database with sample data:
 ## Troubleshooting
 
 ### RLS Error: "new row violates row-level security policy"
+
 - Ensure you're logged in with a valid user
 - Check that the user_id in your data matches auth.uid()
 
 ### Column "source" does not exist
+
 - Run migration 0002_fix_missing_source_column.sql
 - Run `NOTIFY pgrst, 'reload schema'` in SQL Editor
 
 ### Foreign key constraint error
+
 - Make sure the user exists in auth.users before creating leads
 - Verify user_id values match existing users
 
 ## API Keys
 
 Your project is already configured with:
+
 - URL: `https://qxbgltpxqhuhzyjfbcdp.supabase.co`
 - Anon Key: Already set in `.env.local`
 

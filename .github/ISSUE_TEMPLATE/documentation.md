@@ -1,9 +1,9 @@
 ---
 name: Documentation
 about: Report missing, outdated, or unclear documentation
-title: '[DOCS] '
+title: "[DOCS] "
 labels: documentation
-assignees: ''
+assignees: ""
 ---
 
 ## 📚 Documentation Issue
@@ -15,7 +15,7 @@ assignees: ''
 ## 📍 Location
 
 **File:** `Crm-Documentation/XX-FILENAME.md`  
-**Section:** 
+**Section:**
 
 ---
 
@@ -33,13 +33,11 @@ assignees: ''
 
 <!-- Describe the documentation problem -->
 
-
 ---
 
 ## ✅ What Should It Say?
 
 <!-- Suggest the correct documentation -->
-
 
 ---
 
@@ -58,14 +56,13 @@ assignees: ''
 <!-- Link to related docs -->
 
 - See also: `Crm-Documentation/`
-- Related to: 
+- Related to:
 
 ---
 
 ## 💬 Additional Context
 
 <!-- Any other information -->
-
 
 ---
 

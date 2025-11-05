@@ -1,6 +1,7 @@
 # CRM Bug Fixes - Complete Session Summary
 
 ## Session Overview
+
 This session resolved **critical runtime errors** that appeared after recent code changes to the mini-CRM system.
 
 ---
@@ -8,11 +9,13 @@ This session resolved **critical runtime errors** that appeared after recent cod
 ## 🐛 Issues Identified and Fixed
 
 ### 1. **404 Errors for Static Assets**
+
 **Symptom**: 4× 404 Not Found errors for `_next/static` chunks (webpack.js, main-app.js, layout.css, etc.)
 
 **Cause**: Stale Next.js development server after code modifications
 
 **Fix**: Clean server restart
+
 ```bash
 taskkill /F /IM node.exe
 npm run dev
@@ -23,15 +26,18 @@ npm run dev
 ---
 
 ### 2. **Drag-and-Drop UUID Validation Error**
-**Symptom**: 
+
+**Symptom**:
+
 ```
-Invalid enum value. Expected 'new' | 'contacted' | 'qualified' | 'pending' | 'lost', 
+Invalid enum value. Expected 'new' | 'contacted' | 'qualified' | 'pending' | 'lost',
 received 'fd839b7b-e46b-42bd-8761-d5f8e3131af3'
 ```
 
 **Cause**: When dragging a lead card and dropping it **on another card** (instead of on empty column space), `over.id` returned the target card's UUID instead of the column's status enum value.
 
 **Root Issue**: The @dnd-kit library allows dropping on both:
+
 - Droppable areas (columns with status IDs)
 - Sortable items (cards with lead UUIDs)
 
@@ -39,35 +45,41 @@ received 'fd839b7b-e46b-42bd-8761-d5f8e3131af3'
 
 ```typescript
 const handleDragEnd = async (event: DragEndEvent) => {
-  const { active, over } = event
-  setActiveId(null)
-  if (!over) return
+  const { active, over } = event;
+  setActiveId(null);
+  if (!over) return;
 
-  const leadId = active.id as string
-  const overId = over.id as string
+  const leadId = active.id as string;
+  const overId = over.id as string;
 
   // ✅ Check if dropped over a valid column (not another card)
-  const validStatuses: LeadStatus[] = ['new', 'contacted', 'qualified', 'pending', 'lost']
+  const validStatuses: LeadStatus[] = [
+    "new",
+    "contacted",
+    "qualified",
+    "pending",
+    "lost",
+  ];
   if (!validStatuses.includes(overId as LeadStatus)) {
     // If dropped over a card, find which column that card belongs to
-    const targetLead = leads.find((l) => l.id === overId)
-    if (!targetLead) return
-    
-    const newStatus = targetLead.status
-    const lead = leads.find((l) => l.id === leadId)
-    if (!lead || lead.status === newStatus) return
-    
-    await onStatusChange(leadId, newStatus)
-    return
+    const targetLead = leads.find((l) => l.id === overId);
+    if (!targetLead) return;
+
+    const newStatus = targetLead.status;
+    const lead = leads.find((l) => l.id === leadId);
+    if (!lead || lead.status === newStatus) return;
+
+    await onStatusChange(leadId, newStatus);
+    return;
   }
 
   // Dropped directly on a column
-  const newStatus = overId as LeadStatus
-  const lead = leads.find((l) => l.id === leadId)
-  if (!lead || lead.status === newStatus) return
+  const newStatus = overId as LeadStatus;
+  const lead = leads.find((l) => l.id === leadId);
+  if (!lead || lead.status === newStatus) return;
 
-  await onStatusChange(leadId, newStatus)
-}
+  await onStatusChange(leadId, newStatus);
+};
 ```
 
 **Benefit**: Users can now drop leads **anywhere in a column** (on cards or empty space) and it works correctly.
@@ -79,7 +91,9 @@ const handleDragEnd = async (event: DragEndEvent) => {
 ---
 
 ### 3. **Undefined Leads Array Runtime Error**
-**Symptom**: 
+
+**Symptom**:
+
 ```
 TypeError: Cannot read properties of undefined (reading 'length')
 at KanbanColumn
@@ -110,10 +124,12 @@ export function KanbanColumn({ id, title, leads = [], onLeadClick }: KanbanColum
 ---
 
 ### 4. **React Hydration Error (CRITICAL)**
-**Symptom**: 
+
+**Symptom**:
+
 ```
 Warning: Expected server HTML to contain a matching <div> in <div>.
-Uncaught Error: Hydration failed because the initial UI does not match 
+Uncaught Error: Hydration failed because the initial UI does not match
 what was rendered on the server.
 ```
 
@@ -121,18 +137,19 @@ what was rendered on the server.
 
 ```typescript
 // ❌ PROBLEMATIC CODE
-const searchParams = useSearchParams()
+const searchParams = useSearchParams();
 
 const form = useForm({
   defaultValues: {
-    query: searchParams.get('query') || '',  // Read during SSR
-    status: searchParams.get('status') || undefined,
+    query: searchParams.get("query") || "", // Read during SSR
+    status: searchParams.get("status") || undefined,
     // ...
-  }
-})
+  },
+});
 ```
 
 **Why it fails**:
+
 1. **Server**: Renders with URL params from initial request
 2. **Client**: May have different params during hydration
 3. **Result**: HTML mismatch → hydration error
@@ -168,6 +185,7 @@ return <ActualForm />  // ✅ Only renders client-side after hydration
 ```
 
 **Benefits**:
+
 - ✅ No hydration errors (server/client render identical HTML)
 - ✅ Preserves functionality (form syncs with URL after mount)
 - ✅ Better performance (React doesn't force client re-render)
@@ -182,11 +200,13 @@ return <ActualForm />  // ✅ Only renders client-side after hydration
 ## 📊 Current System Status
 
 ### Dev Server
+
 - ✅ Running on http://localhost:3000
 - ✅ No compilation errors
 - ✅ Hot reload working
 
 ### Features Verified Working
+
 - ✅ Drag-and-drop Kanban (all scenarios)
 - ✅ Lead creation and editing
 - ✅ Filters with URL synchronization
@@ -195,6 +215,7 @@ return <ActualForm />  // ✅ Only renders client-side after hydration
 - ✅ Mobile responsive layout
 
 ### Console Status
+
 - ✅ No hydration warnings
 - ✅ No 404 errors
 - ✅ No runtime errors
@@ -245,7 +266,8 @@ Before marking this complete, please verify:
 
 All critical bugs have been **identified**, **fixed**, and **documented**. The CRM is now running smoothly with no console errors or runtime issues.
 
-**Next Steps**: 
+**Next Steps**:
+
 - Test the application thoroughly
 - If everything works correctly, proceed with any new features or improvements
 - Consider running E2E tests with Playwright to verify all workflows

@@ -1,40 +1,46 @@
 # Hydration Error Fix - Complete Solution
 
 ## Issue
+
 React hydration error in the dashboard caused by SSR/CSR mismatch:
+
 ```
 Warning: Expected server HTML to contain a matching <div> in <div>.
 Uncaught Error: Hydration failed because the initial UI does not match what was rendered on the server.
 ```
 
 ## Root Cause
+
 The [`FiltersBar`](file://c:\Users\Submarino\Desktop\Nova%20pasta\components\leads\FiltersBar.tsx) component was reading from `useSearchParams()` during initial render in the `defaultValues` of `useForm`:
 
 ```typescript
 // ❌ PROBLEMATIC CODE
-const searchParams = useSearchParams()
+const searchParams = useSearchParams();
 
 const { register, handleSubmit, setValue, watch, reset } = useForm<LeadFilter>({
   resolver: zodResolver(LeadFilterSchema),
   defaultValues: {
-    query: searchParams.get('query') || '',           // Read during render
-    status: (searchParams.get('status') as LeadStatus) || undefined,
-    source: searchParams.get('source') || '',
-    from: searchParams.get('from') || '',
-    to: searchParams.get('to') || '',
+    query: searchParams.get("query") || "", // Read during render
+    status: (searchParams.get("status") as LeadStatus) || undefined,
+    source: searchParams.get("source") || "",
+    from: searchParams.get("from") || "",
+    to: searchParams.get("to") || "",
   },
-})
+});
 ```
 
 **Why this causes hydration mismatch:**
+
 1. **Server-side**: Renders with URL params from the initial request
 2. **Client-side**: May have different URL params or timing issues when hydrating
 3. React detects the HTML mismatch and throws hydration error
 
 ## Solution (Final Approach)
+
 Use **conditional rendering with mounted state** - don't render the actual form until after client-side hydration completes. Show a loading skeleton during SSR:
 
 ### Implementation:
+
 ```typescript
 'use client'
 
@@ -100,13 +106,15 @@ export function FiltersBar() {
 ## Key Changes in `components/leads/FiltersBar.tsx`
 
 1. **Added imports**:
+
    ```typescript
-   import { useEffect, useState } from 'react'
+   import { useEffect, useState } from "react";
    ```
 
 2. **Added mounted state**:
+
    ```typescript
-   const [mounted, setMounted] = useState(false)
+   const [mounted, setMounted] = useState(false);
    ```
 
 3. **Changed defaultValues** to static values (no `searchParams` access)
@@ -123,16 +131,20 @@ export function FiltersBar() {
 ## Why This Approach Works Best
 
 ### Previous Attempt (Partial Fix)
+
 Initially tried syncing in `useEffect` only, but the form still rendered during SSR with watched values that could cause mismatches.
 
 ### Current Solution (Complete Fix)
+
 By **not rendering the form at all** until after mount:
+
 1. ✅ Server renders a simple skeleton (no dynamic content)
 2. ✅ Client initially renders the same skeleton (hydration succeeds)
 3. ✅ After hydration, `mounted` becomes `true` and form renders with URL params
 4. ✅ No SSR/CSR mismatch possible
 
 ### Trade-offs
+
 - **Tiny flash of loading skeleton** (usually imperceptible due to fast hydration)
 - **Perfect hydration** with zero errors
 - **Maintains layout stability** (skeleton matches form dimensions)
@@ -152,14 +164,18 @@ This is part of a series of hydration fixes in the CRM:
 2. **FiltersBar** (this fix) - Fixed `searchParams` access in form defaultValues
 
 ## Testing
+
 After this fix:
+
 - ✅ No console errors on page load
 - ✅ Filters properly sync with URL params
 - ✅ Drag-and-drop working (confirmed by successful PUT requests)
 - ✅ Form submission and reset working correctly
 
 ## Memory Update
+
 This fix reinforces the hydration error prevention pattern documented in project memory:
+
 > "Avoid using client-side APIs (e.g., window, localStorage) directly in component render logic. Instead, initialize state with default values and update within useEffect to ensure server and client renders match initially."
 
 **Extended to include:** `useSearchParams()` should also be avoided in initial render/defaultValues.

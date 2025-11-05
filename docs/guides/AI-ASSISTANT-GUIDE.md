@@ -59,6 +59,7 @@ This is a **complete and comprehensive documentation** of the Lasy CRM project, 
 ### For Understanding the Project
 
 **Start here:**
+
 1. [README.md](./README.md) - Overview
 2. [02-ARCHITECTURE.md](./02-ARCHITECTURE.md) - Tech stack and design decisions
 3. [08-FLOWCHARTS.md](./08-FLOWCHARTS.md) - Visual system behavior
@@ -66,6 +67,7 @@ This is a **complete and comprehensive documentation** of the Lasy CRM project, 
 ### For Fixing Bugs
 
 **Start here:**
+
 1. [06-BUGS-AND-FIXES.md](./06-BUGS-AND-FIXES.md) - Check if bug is known
 2. [09-TROUBLESHOOTING.md](./09-TROUBLESHOOTING.md) - Common solutions
 3. [QUICK-REFERENCE.md](./QUICK-REFERENCE.md) - Quick fixes
@@ -73,6 +75,7 @@ This is a **complete and comprehensive documentation** of the Lasy CRM project, 
 ### For Adding Features
 
 **Start here:**
+
 1. [07-HOW-TO-GUIDES.md](./07-HOW-TO-GUIDES.md) - Examples of common tasks
 2. [04-COMPONENTS.md](./04-COMPONENTS.md) - Component patterns
 3. [12-CONTRIBUTING.md](./12-CONTRIBUTING.md) - Code standards
@@ -80,6 +83,7 @@ This is a **complete and comprehensive documentation** of the Lasy CRM project, 
 ### For Deployment
 
 **Start here:**
+
 1. [11-DEPLOYMENT.md](./11-DEPLOYMENT.md) - Deployment guides
 2. [10-PERFORMANCE.md](./10-PERFORMANCE.md) - Performance checklist
 3. [05-DATABASE.md](./05-DATABASE.md) - Migration strategy
@@ -92,28 +96,31 @@ This is a **complete and comprehensive documentation** of the Lasy CRM project, 
 
 These bugs are **documented but not yet fixed**. Don't assume they're resolved:
 
-| Priority | Bug | Location | Fix |
-|----------|-----|----------|-----|
-| P-0 | Import upsert fails | `app/api/leads/import/route.ts:79` | Remove `updated_at` from payload |
-| P-1 | Phone not searchable | `app/dashboard/page.tsx:24` | Add `phone.ilike` to query |
-| P-1 | D&D order not persistent | Database | Add `position` column + migration |
-| P-2 | Mobile header cramped | `app/dashboard/page.tsx` | Implement DropdownMenu |
+| Priority | Bug                      | Location                           | Fix                               |
+| -------- | ------------------------ | ---------------------------------- | --------------------------------- |
+| P-0      | Import upsert fails      | `app/api/leads/import/route.ts:79` | Remove `updated_at` from payload  |
+| P-1      | Phone not searchable     | `app/dashboard/page.tsx:24`        | Add `phone.ilike` to query        |
+| P-1      | D&D order not persistent | Database                           | Add `position` column + migration |
+| P-2      | Mobile header cramped    | `app/dashboard/page.tsx`           | Implement DropdownMenu            |
 
 See [06-BUGS-AND-FIXES.md](./06-BUGS-AND-FIXES.md) for complete details.
 
 ### Lessons Learned from Bugs
 
 **Hydration Errors:**
+
 - Never use `useSearchParams()` before hydration
 - Always defer URL param reading to `useEffect`
 - Use `suppressHydrationWarning` on inputs with dynamic values
 
 **Database Triggers:**
+
 - Never send auto-updated columns (`updated_at`, `created_at`) in payloads
 - Let PostgreSQL triggers handle timestamp updates
 - PostgREST schema cache excludes auto-generated columns
 
 **Drag and Drop:**
+
 - Use `onDragOver` for real-time visual feedback
 - Use `onDragEnd` for final position
 - TouchSensor required for mobile (250ms activation delay)
@@ -165,6 +172,7 @@ Testing
 ## 🎓 Learning Path for New AI Assistants
 
 ### Day 1: Understanding
+
 1. Read [README.md](./README.md) - 10 minutes
 2. Read [02-ARCHITECTURE.md](./02-ARCHITECTURE.md) - 30 minutes
 3. Review [08-FLOWCHARTS.md](./08-FLOWCHARTS.md) - 15 minutes
@@ -172,6 +180,7 @@ Testing
 **Goal**: Understand what the system does and how it works
 
 ### Day 2: Deep Dive
+
 1. Read [06-BUGS-AND-FIXES.md](./06-BUGS-AND-FIXES.md) - 45 minutes
 2. Read [04-COMPONENTS.md](./04-COMPONENTS.md) - 20 minutes
 3. Read [05-DATABASE.md](./05-DATABASE.md) - 20 minutes
@@ -179,6 +188,7 @@ Testing
 **Goal**: Understand common pitfalls and implementation details
 
 ### Day 3: Practical Skills
+
 1. Read [07-HOW-TO-GUIDES.md](./07-HOW-TO-GUIDES.md) - 30 minutes
 2. Read [09-TROUBLESHOOTING.md](./09-TROUBLESHOOTING.md) - 20 minutes
 3. Review [QUICK-REFERENCE.md](./QUICK-REFERENCE.md) - 10 minutes
@@ -186,6 +196,7 @@ Testing
 **Goal**: Know how to add features and fix issues
 
 ### Ongoing Reference
+
 - [03-API-REFERENCE.md](./03-API-REFERENCE.md) - When working with API
 - [10-PERFORMANCE.md](./10-PERFORMANCE.md) - When optimizing
 - [11-DEPLOYMENT.md](./11-DEPLOYMENT.md) - When deploying
@@ -216,6 +227,7 @@ Testing
 ## ✅ Quality Assurance
 
 This documentation has been:
+
 - ✅ Tested against real codebase
 - ✅ Verified with actual file paths
 - ✅ Cross-referenced between files
@@ -271,6 +283,7 @@ An AI assistant has successfully learned this codebase when they can:
 ## 📝 Documentation Maintenance
 
 **This documentation should be updated when:**
+
 - A new bug is discovered (add to 06-BUGS-AND-FIXES.md)
 - A new feature is added (add to 07-HOW-TO-GUIDES.md)
 - Architecture changes (update 02-ARCHITECTURE.md)

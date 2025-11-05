@@ -11,28 +11,32 @@ Main client component that manages lead state.
 **Location:** `components/DashboardClient.tsx`
 
 **Props:**
+
 ```typescript
 interface Props {
-  initialLeads: Lead[]
+  initialLeads: Lead[];
 }
 ```
 
 **State:**
+
 ```typescript
-const [leads, setLeads] = useState<Lead[]>(initialLeads)
-const [editingLead, setEditingLead] = useState<Lead | null>(null)
+const [leads, setLeads] = useState<Lead[]>(initialLeads);
+const [editingLead, setEditingLead] = useState<Lead | null>(null);
 ```
 
 **Key Functions:**
+
 - `handleLeadUpdate(id, changes)` - Optimistic update with API call
 - `handleLeadDelete(id)` - Delete with confirmation
 - `handleNewLead()` - Open create dialog
 
 **Usage:**
+
 ```tsx
 // In Server Component
-const leads = await getLeads()
-return <DashboardClient initialLeads={leads} />
+const leads = await getLeads();
+return <DashboardClient initialLeads={leads} />;
 ```
 
 ---
@@ -44,27 +48,32 @@ Drag-and-drop Kanban board using @dnd-kit.
 **Location:** `components/kanban/KanbanBoard.tsx`
 
 **Props:**
+
 ```typescript
 interface Props {
-  leads: Lead[]
-  onLeadUpdate: (id: string, changes: Partial<Lead>) => void
-  onLeadEdit: (lead: Lead) => void
-  onLeadDelete: (id: string) => void
+  leads: Lead[];
+  onLeadUpdate: (id: string, changes: Partial<Lead>) => void;
+  onLeadEdit: (lead: Lead) => void;
+  onLeadDelete: (id: string) => void;
 }
 ```
 
 **Features:**
+
 - Touch support (250ms long-press)
 - Real-time reordering (onDragOver)
 - Status change on drop (onDragEnd)
 - Horizontal scroll on mobile
 
 **Sensors:**
+
 ```typescript
 const sensors = useSensors(
   useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
-  useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } })
-)
+  useSensor(TouchSensor, {
+    activationConstraint: { delay: 250, tolerance: 5 },
+  }),
+);
 ```
 
 ---
@@ -78,6 +87,7 @@ Search and filter form with URL sync.
 **Props:** None (reads from URL)
 
 **Features:**
+
 - Search by name, email, company, notes
 - Filter by status
 - Date range filter
@@ -85,13 +95,14 @@ Search and filter form with URL sync.
 - URL synchronization
 
 **Hydration Fix:**
+
 ```typescript
-const [isClient, setIsClient] = useState(false)
+const [isClient, setIsClient] = useState(false);
 
 useEffect(() => {
-  setIsClient(true)
-  reset({ query: searchParams.get('query') || '' })
-}, [searchParams])
+  setIsClient(true);
+  reset({ query: searchParams.get("query") || "" });
+}, [searchParams]);
 ```
 
 ---
@@ -103,27 +114,30 @@ Form for creating/editing leads with validation.
 **Location:** `components/leads/LeadEditForm.tsx`
 
 **Props:**
+
 ```typescript
 interface Props {
-  lead?: Lead | null
-  onSave: (data: Lead) => Promise<void>
-  onClose: () => void
+  lead?: Lead | null;
+  onSave: (data: Lead) => Promise<void>;
+  onClose: () => void;
 }
 ```
 
 **Validation:**
+
 ```typescript
 const form = useForm<Lead>({
   resolver: zodResolver(leadSchema),
   defaultValues: lead || {
-    name: '',
-    email: '',
-    status: 'new',
-  }
-})
+    name: "",
+    email: "",
+    status: "new",
+  },
+});
 ```
 
 **Fields:**
+
 - Name (required)
 - Email (required, validated)
 - Phone (optional)
@@ -141,22 +155,25 @@ CSV/XLSX import dialog with preview.
 **Location:** `components/leads/ImportLeadsDialog.tsx`
 
 **Features:**
+
 - File upload (CSV/XLSX)
 - Base64 encoding
 - Progress feedback
 - Detailed results toast
 
 **Usage:**
+
 ```tsx
 <ImportLeadsDialog onImportComplete={() => router.refresh()} />
 ```
 
 **Toast Messages:**
+
 ```typescript
-toast.success('Import Successful', {
-  description: 'Leads: 10 new, 5 updated, 2 rejected',
+toast.success("Import Successful", {
+  description: "Leads: 10 new, 5 updated, 2 rejected",
   duration: 10000,
-})
+});
 ```
 
 ---
@@ -168,20 +185,23 @@ Individual lead card in Kanban column.
 **Location:** `components/kanban/LeadCard.tsx`
 
 **Props:**
+
 ```typescript
 interface Props {
-  lead: Lead
-  onClick: () => void
+  lead: Lead;
+  onClick: () => void;
 }
 ```
 
 **Features:**
+
 - Single-click to edit
 - Drag handle
 - Timestamp display
 - Status badge
 
 **Display:**
+
 - Lead name
 - Email
 - Company (if available)
@@ -196,19 +216,23 @@ Single column in Kanban board.
 **Location:** `components/kanban/KanbanColumn.tsx`
 
 **Props:**
+
 ```typescript
 interface Props {
-  status: LeadStatus
-  leads: Lead[]
-  onLeadClick: (lead: Lead) => void
+  status: LeadStatus;
+  leads: Lead[];
+  onLeadClick: (lead: Lead) => void;
 }
 ```
 
 **Styling:**
+
 ```tsx
 <div className="min-w-[300px] flex-shrink-0">
   <SortableContext items={leads} strategy={verticalListSortingStrategy}>
-    {leads.map(lead => <LeadCard key={lead.id} lead={lead} />)}
+    {leads.map((lead) => (
+      <LeadCard key={lead.id} lead={lead} />
+    ))}
   </SortableContext>
 </div>
 ```
@@ -218,6 +242,7 @@ interface Props {
 ## shadcn/ui Components Used
 
 ### Button
+
 ```tsx
 <Button variant="default | outline | ghost" size="default | sm | lg | icon">
   Click me
@@ -225,15 +250,17 @@ interface Props {
 ```
 
 ### Input
+
 ```tsx
-<Input 
-  type="text | email | number" 
+<Input
+  type="text | email | number"
   placeholder="Enter value"
-  {...register('fieldName')}
+  {...register("fieldName")}
 />
 ```
 
 ### Dialog
+
 ```tsx
 <Dialog open={isOpen} onOpenChange={setIsOpen}>
   <DialogTrigger asChild>
@@ -249,6 +276,7 @@ interface Props {
 ```
 
 ### Select
+
 ```tsx
 <Select value={value} onValueChange={setValue}>
   <SelectTrigger>
@@ -262,18 +290,19 @@ interface Props {
 ```
 
 ### Toast
+
 ```tsx
-import { toast } from 'sonner'
+import { toast } from "sonner";
 
-toast.success('Title', {
-  description: 'Message',
+toast.success("Title", {
+  description: "Message",
   duration: 10000,
-})
+});
 
-toast.error('Error', {
+toast.error("Error", {
   description: error.message,
   duration: 10000,
-})
+});
 ```
 
 ---

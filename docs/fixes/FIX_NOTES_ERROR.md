@@ -3,6 +3,7 @@
 ## Problema
 
 Ao criar um lead, aparece o erro:
+
 ```
 Error: Could not find the 'notes' column of 'leads' in the schema cache
 ```
@@ -20,6 +21,7 @@ O schema cache do PostgREST no Supabase não está sincronizado com a estrutura 
    - Navegue para: **SQL Editor** no menu lateral
 
 2. **Execute a Migration 0003**
+
    ```sql
    -- Ensure notes column exists in leads table
    ALTER TABLE leads ADD COLUMN IF NOT EXISTS notes TEXT;
@@ -39,6 +41,7 @@ Se a migration não funcionar, force o reload:
 1. **Vá para o SQL Editor no Supabase**
 
 2. **Execute este comando**:
+
    ```sql
    NOTIFY pgrst, 'reload schema';
    ```
@@ -52,11 +55,13 @@ Se a migration não funcionar, force o reload:
 ⚠️ **ATENÇÃO**: Isso apagará todos os leads existentes!
 
 1. **Backup dos dados** (se houver):
+
    ```sql
    SELECT * FROM leads;
    ```
 
 2. **Drop e recriar**:
+
    ```sql
    DROP TABLE IF EXISTS leads CASCADE;
    ```
@@ -68,13 +73,14 @@ Se a migration não funcionar, force o reload:
 Após aplicar a correção, verifique se a coluna existe:
 
 ```sql
-SELECT column_name, data_type 
-FROM information_schema.columns 
-WHERE table_name = 'leads' 
+SELECT column_name, data_type
+FROM information_schema.columns
+WHERE table_name = 'leads'
 AND column_name = 'notes';
 ```
 
 Deve retornar:
+
 ```
 column_name | data_type
 ------------|----------
@@ -92,6 +98,7 @@ notes       | text
 ## Prevenção
 
 Este erro ocorre quando:
+
 - As migrations não são executadas na ordem correta
 - O PostgREST não recarrega o schema automaticamente
 - Há conflito entre schema do banco e cache do PostgREST

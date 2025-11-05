@@ -60,18 +60,22 @@ The application now supports both user registration and login.
 ## Troubleshooting
 
 ### Login doesn't redirect
+
 ✅ **FIXED**: Now uses `window.location.href` instead of `router.push()` for reliable navigation after authentication.
 
 ### Email confirmation not working
+
 - Check Supabase settings: Authentication → Settings → Email Auth
 - Disable "Confirm email" for development
 - Enable for production with proper email templates
 
 ### Password requirements
+
 - Minimum 6 characters
 - Can be customized in Supabase → Authentication → Policies
 
 ### User already exists error
+
 - Email must be unique
 - Use password reset if forgotten
 - Check Supabase → Authentication → Users to verify
@@ -89,16 +93,21 @@ The application now supports both user registration and login.
 ## Development Tips
 
 ### Test User Credentials
+
 Create a test user for development:
+
 - Email: demo@lasy.ai
 - Password: demo123456
 
 ### Disable Email Confirmation (Development)
+
 In Supabase Dashboard:
+
 1. Go to Authentication → Email Templates
 2. Disable "Confirm signup" for faster testing
 
 ### Enable Email Confirmation (Production)
+
 1. Configure SMTP settings in Supabase
 2. Customize email templates
 3. Enable "Confirm email" in Auth settings

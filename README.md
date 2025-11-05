@@ -29,31 +29,34 @@ A modern, full-stack Customer Relationship Management (CRM) system built with Ne
 
 ## 📋 Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 - Supabase account and project
 
 ## 🔧 Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/RaFeltrim/lasy-ai-crm.git
    cd lasy-ai-crm
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Set up environment variables**
-   
+
    Create a `.env.local` file in the root directory:
+
    ```env
    NEXT_PUBLIC_SUPABASE_URL=your-project-url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
    ```
-   
+
    Get these values from your Supabase project:
    - Go to [Supabase Dashboard](https://supabase.com/dashboard)
    - Select your project
@@ -61,7 +64,7 @@ A modern, full-stack Customer Relationship Management (CRM) system built with Ne
    - Copy the **Project URL** and **anon public** key
 
 4. **Run database migrations**
-   
+
    Execute the SQL files in `supabase/migrations/` in your Supabase SQL editor (in order):
    - `0001_initial_schema.sql`
    - `0002_fix_missing_source_column.sql`
@@ -70,22 +73,25 @@ A modern, full-stack Customer Relationship Management (CRM) system built with Ne
    - `0005_ensure_updated_at_column.sql`
 
 5. **Run the development server**
+
    ```bash
    npm run dev
    ```
 
 6. **Open your browser**
-   
+
    Navigate to [http://localhost:3000](http://localhost:3000)
 
 ## 🧪 Testing
 
 ### Unit Tests (Vitest)
+
 ```bash
 npm test
 ```
 
 ### E2E Tests (Playwright)
+
 ```bash
 # Install Playwright browsers (first time only)
 npx playwright install
@@ -150,15 +156,28 @@ The app uses Next.js Runtime for Netlify and dynamic routes are configured to pr
 │   └── seed.sql              # Sample data
 ├── tests/                     # Vitest unit tests
 ├── playwright/                # Playwright E2E tests
-├── Crm-Documentation/         # Comprehensive project documentation
+├── docs/                      # Comprehensive project documentation
+│   ├── setup/                # Setup and configuration guides
+│   ├── guides/               # User and developer guides
+│   └── fixes/                # Historical bug fixes and patches
 └── middleware.ts             # Auth middleware for route protection
 ```
+
+## 📚 Documentation
+
+For comprehensive documentation, see the **[docs/](docs/)** directory:
+
+- **Setup Guides**: [Authentication](docs/setup/AUTHENTICATION.md), [Supabase Setup](docs/setup/SUPABASE_SETUP.md)
+- **Developer Guides**: [Architecture](docs/guides/02-ARCHITECTURE.md), [API Reference](docs/guides/03-API-REFERENCE.md), [Components](docs/guides/04-COMPONENTS.md)
+- **Operations**: [Deployment](docs/guides/11-DEPLOYMENT.md), [Troubleshooting](docs/guides/09-TROUBLESHOOTING.md), [Performance](docs/guides/10-PERFORMANCE.md)
+- **[Complete Documentation Index](docs/README.md)**
 
 ## 🔐 Authentication
 
 The application uses Supabase Auth with server-side rendering (SSR). Protected routes are automatically redirected to the login page if the user is not authenticated.
 
 To create a test user:
+
 1. Go to your Supabase project dashboard
 2. Navigate to Authentication > Users
 3. Create a new user with email and password

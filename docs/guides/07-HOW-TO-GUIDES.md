@@ -20,18 +20,18 @@ ALTER TABLE leads ADD COLUMN budget DECIMAL(10,2);
 ```typescript
 // lib/types.ts (or wherever Lead is defined)
 export interface Lead {
-  id: string
-  name: string
-  email: string
-  phone?: string
-  company?: string
-  budget?: number // ADD THIS
-  status: LeadStatus
-  source?: string
-  notes?: string
-  created_at: string
-  updated_at: string
-  user_id: string
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  budget?: number; // ADD THIS
+  status: LeadStatus;
+  source?: string;
+  notes?: string;
+  created_at: string;
+  updated_at: string;
+  user_id: string;
 }
 ```
 
@@ -40,15 +40,15 @@ export interface Lead {
 ```typescript
 // lib/zod-schemas.ts
 export const leadSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Invalid email'),
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email"),
   phone: z.string().optional(),
   company: z.string().optional(),
   budget: z.number().positive().optional(), // ADD THIS
-  status: z.enum(['new', 'contacted', 'qualified', 'customer', 'lost']),
+  status: z.enum(["new", "contacted", "qualified", "customer", "lost"]),
   source: z.string().optional(),
   notes: z.string().optional(),
-})
+});
 ```
 
 ### Step 4: Update Form UI
@@ -61,7 +61,7 @@ export const leadSchema = z.object({
     id="budget"
     type="number"
     step="0.01"
-    {...register('budget', { valueAsNumber: true })}
+    {...register("budget", { valueAsNumber: true })}
   />
   {errors.budget && (
     <p className="text-sm text-destructive">{errors.budget.message}</p>
@@ -73,11 +73,13 @@ export const leadSchema = z.object({
 
 ```tsx
 // components/kanban/LeadCard.tsx
-{lead.budget && (
-  <div className="text-sm text-muted-foreground">
-    Budget: ${lead.budget.toLocaleString()}
-  </div>
-)}
+{
+  lead.budget && (
+    <div className="text-sm text-muted-foreground">
+      Budget: ${lead.budget.toLocaleString()}
+    </div>
+  );
+}
 ```
 
 ### Step 6: Test
@@ -107,13 +109,13 @@ ALTER TYPE lead_status ADD VALUE 'proposal';
 
 ```typescript
 // lib/types.ts
-export type LeadStatus = 
-  | 'new' 
-  | 'contacted' 
-  | 'proposal' // ADD THIS
-  | 'qualified' 
-  | 'customer' 
-  | 'lost'
+export type LeadStatus =
+  | "new"
+  | "contacted"
+  | "proposal" // ADD THIS
+  | "qualified"
+  | "customer"
+  | "lost";
 ```
 
 ### Step 3: Update Zod Schema
@@ -128,21 +130,25 @@ status: z.enum(['new', 'contacted', 'proposal', 'qualified', 'customer', 'lost']
 ```tsx
 // components/kanban/KanbanBoard.tsx
 const columns: LeadStatus[] = [
-  'new',
-  'contacted',
-  'proposal', // ADD THIS
-  'qualified',
-  'customer',
-  'lost'
-]
+  "new",
+  "contacted",
+  "proposal", // ADD THIS
+  "qualified",
+  "customer",
+  "lost",
+];
 
 return (
   <div className="flex overflow-x-auto gap-4">
-    {columns.map(status => (
-      <KanbanColumn key={status} status={status} leads={getLeadsForStatus(status)} />
+    {columns.map((status) => (
+      <KanbanColumn
+        key={status}
+        status={status}
+        leads={getLeadsForStatus(status)}
+      />
     ))}
   </div>
-)
+);
 ```
 
 ### Step 5: Add Column Label
@@ -150,13 +156,13 @@ return (
 ```typescript
 // lib/utils.ts or constants.ts
 export const STATUS_LABELS: Record<LeadStatus, string> = {
-  new: 'New Leads',
-  contacted: 'Contacted',
-  proposal: 'Proposal Sent', // ADD THIS
-  qualified: 'Qualified',
-  customer: 'Customers',
-  lost: 'Lost',
-}
+  new: "New Leads",
+  contacted: "Contacted",
+  proposal: "Proposal Sent", // ADD THIS
+  qualified: "Qualified",
+  customer: "Customers",
+  lost: "Lost",
+};
 ```
 
 ### Step 6: Update KanbanColumn
@@ -181,13 +187,13 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: 'hsl(221, 83%, 53%)', // Your brand color
-          foreground: 'hsl(0, 0%, 100%)',
+          DEFAULT: "hsl(221, 83%, 53%)", // Your brand color
+          foreground: "hsl(0, 0%, 100%)",
         },
       },
     },
   },
-}
+};
 ```
 
 ### Add Dark Mode
@@ -230,33 +236,35 @@ const roboto = Roboto({ weight: ['400', '700'], subsets: ['latin'] })
 // components/DashboardClient.tsx
 useEffect(() => {
   const channel = supabase
-    .channel('leads-changes')
+    .channel("leads-changes")
     .on(
-      'postgres_changes',
+      "postgres_changes",
       {
-        event: '*',
-        schema: 'public',
-        table: 'leads',
+        event: "*",
+        schema: "public",
+        table: "leads",
         filter: `user_id=eq.${user.id}`,
       },
       (payload) => {
-        if (payload.eventType === 'INSERT') {
-          setLeads(prev => [...prev, payload.new as Lead])
-        } else if (payload.eventType === 'UPDATE') {
-          setLeads(prev => prev.map(l => 
-            l.id === payload.new.id ? payload.new as Lead : l
-          ))
-        } else if (payload.eventType === 'DELETE') {
-          setLeads(prev => prev.filter(l => l.id !== payload.old.id))
+        if (payload.eventType === "INSERT") {
+          setLeads((prev) => [...prev, payload.new as Lead]);
+        } else if (payload.eventType === "UPDATE") {
+          setLeads((prev) =>
+            prev.map((l) =>
+              l.id === payload.new.id ? (payload.new as Lead) : l,
+            ),
+          );
+        } else if (payload.eventType === "DELETE") {
+          setLeads((prev) => prev.filter((l) => l.id !== payload.old.id));
         }
-      }
+      },
     )
-    .subscribe()
+    .subscribe();
 
   return () => {
-    supabase.removeChannel(channel)
-  }
-}, [user.id])
+    supabase.removeChannel(channel);
+  };
+}, [user.id]);
 ```
 
 ### Step 2: Enable Realtime in Supabase
@@ -287,30 +295,30 @@ npm install -D @types/jspdf-autotable
 
 ```typescript
 // lib/export-pdf.ts
-import jsPDF from 'jspdf'
-import autoTable from 'jspdf-autotable'
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 export function exportLeadsToPDF(leads: Lead[]) {
-  const doc = new jsPDF()
-  
-  doc.setFontSize(18)
-  doc.text('Leads Report', 14, 20)
-  
-  doc.setFontSize(11)
-  doc.text(`Generated: ${new Date().toLocaleDateString()}`, 14, 30)
-  
+  const doc = new jsPDF();
+
+  doc.setFontSize(18);
+  doc.text("Leads Report", 14, 20);
+
+  doc.setFontSize(11);
+  doc.text(`Generated: ${new Date().toLocaleDateString()}`, 14, 30);
+
   autoTable(doc, {
     startY: 40,
-    head: [['Name', 'Email', 'Status', 'Created']],
-    body: leads.map(lead => [
+    head: [["Name", "Email", "Status", "Created"]],
+    body: leads.map((lead) => [
       lead.name,
       lead.email,
       lead.status,
       new Date(lead.created_at).toLocaleDateString(),
     ]),
-  })
-  
-  doc.save('leads-report.pdf')
+  });
+
+  doc.save("leads-report.pdf");
 }
 ```
 
@@ -318,7 +326,7 @@ export function exportLeadsToPDF(leads: Lead[]) {
 
 ```tsx
 // components/leads/ExportButton.tsx
-import { exportLeadsToPDF } from '@/lib/export-pdf'
+import { exportLeadsToPDF } from "@/lib/export-pdf";
 
 export function ExportButton({ leads }: { leads: Lead[] }) {
   return (
@@ -326,7 +334,7 @@ export function ExportButton({ leads }: { leads: Lead[] }) {
       <FileDown className="mr-2 h-4 w-4" />
       Export PDF
     </Button>
-  )
+  );
 }
 ```
 
@@ -361,16 +369,19 @@ Jane Smith,jane@example.com,,Smith Co,contacted,referral,
 ### Error Handling
 
 **Invalid Email:**
+
 ```
 Row 3: Invalid email format
 ```
 
 **Missing Name:**
+
 ```
 Row 5: Name is required
 ```
 
 **Invalid Status:**
+
 ```
 Row 7: Invalid status 'pending' (must be: new, contacted, qualified, customer, lost)
 ```
@@ -383,23 +394,25 @@ Row 7: Invalid status 'pending' (must be: new, contacted, qualified, customer, l
 
 ```typescript
 // lib/zod-schemas.ts
-export const leadSchema = z.object({
-  name: z.string().min(1),
-  email: z.string().email(),
-  phone: z.string().optional(),
-  status: z.enum(['new', 'contacted', 'qualified', 'customer', 'lost']),
-}).refine(
-  (data) => {
-    if (data.status === 'qualified' && !data.phone) {
-      return false
-    }
-    return true
-  },
-  {
-    message: 'Phone is required for qualified leads',
-    path: ['phone'],
-  }
-)
+export const leadSchema = z
+  .object({
+    name: z.string().min(1),
+    email: z.string().email(),
+    phone: z.string().optional(),
+    status: z.enum(["new", "contacted", "qualified", "customer", "lost"]),
+  })
+  .refine(
+    (data) => {
+      if (data.status === "qualified" && !data.phone) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "Phone is required for qualified leads",
+      path: ["phone"],
+    },
+  );
 ```
 
 ---
@@ -411,9 +424,9 @@ export const leadSchema = z.object({
 ```tsx
 // Add to app/api/test/route.ts
 export async function GET() {
-  const supabase = createClient()
-  const { data, error } = await supabase.from('leads').select('count')
-  return Response.json({ data, error })
+  const supabase = createClient();
+  const { data, error } = await supabase.from("leads").select("count");
+  return Response.json({ data, error });
 }
 ```
 

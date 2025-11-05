@@ -11,6 +11,7 @@
 ## Root Cause
 
 The `react-input-mask` library (v2.x) uses the deprecated `findDOMNode` API internally, which triggers warnings in React 18's StrictMode. This API was deprecated because:
+
 - It breaks encapsulation
 - Prevents future optimizations like concurrent rendering
 - Will be removed in a future React version
@@ -18,6 +19,7 @@ The `react-input-mask` library (v2.x) uses the deprecated `findDOMNode` API inte
 ## Solution
 
 Replaced `react-input-mask` with `react-imask`, a modern alternative that:
+
 - ✅ Fully compatible with React 18
 - ✅ No StrictMode warnings
 - ✅ Uses refs properly (no `findDOMNode`)
@@ -36,7 +38,9 @@ npm install react-imask
 ### 2. Files Modified
 
 #### `app/leads/new/page.tsx`
+
 **Before**:
+
 ```typescript
 import InputMask from 'react-input-mask'
 
@@ -52,6 +56,7 @@ import InputMask from 'react-input-mask'
 ```
 
 **After**:
+
 ```typescript
 import { IMaskInput } from 'react-imask'
 
@@ -71,19 +76,22 @@ import { IMaskInput } from 'react-imask'
 ```
 
 #### `components/leads/LeadEditForm.tsx`
+
 Same pattern applied to the edit form.
 
 ## Key Differences
 
 ### API Changes
-| Feature | react-input-mask | react-imask |
-|---------|------------------|-------------|
-| Mask syntax | `+99 (99) 99999-9999` | `+00 (00) 00000-0000` |
-| Value handler | `onChange` | `onAccept` |
+
+| Feature        | react-input-mask                    | react-imask                     |
+| -------------- | ----------------------------------- | ------------------------------- |
+| Mask syntax    | `+99 (99) 99999-9999`               | `+00 (00) 00000-0000`           |
+| Value handler  | `onChange`                          | `onAccept`                      |
 | Render pattern | Render props (children as function) | Render prop (explicit `render`) |
-| Ref handling | Automatic | Manual via `ref` prop |
+| Ref handling   | Automatic                           | Manual via `ref` prop           |
 
 ### Benefits of react-imask
+
 - **No deprecation warnings** - Uses modern React patterns
 - **Better performance** - No DOM queries
 - **Type-safe** - Better TypeScript definitions
@@ -92,6 +100,7 @@ Same pattern applied to the edit form.
 ## Testing Verification
 
 ### Test Cases Passed:
+
 - ✅ Phone field renders correctly
 - ✅ Mask applies automatically (+55 (19) 99999-9999)
 - ✅ Value validation works with Zod schema
@@ -100,6 +109,7 @@ Same pattern applied to the edit form.
 - ✅ Edit form pre-fills phone correctly
 
 ### Browser Console:
+
 **Before**: `Warning: findDOMNode is deprecated in StrictMode...`
 **After**: ✅ No warnings
 
@@ -108,6 +118,7 @@ Same pattern applied to the edit form.
 This fix addresses the issue identified by QA_Senior_Adversario:
 
 **QA Report**:
+
 - **Severity**: Medium (deprecation warning, not blocking)
 - **Category**: Code Quality / Future Compatibility
 - **Detection Method**: React StrictMode console output
@@ -123,8 +134,10 @@ This fix addresses the issue identified by QA_Senior_Adversario:
 4. **QA should include** compatibility checks in test plans
 
 ## Related Files
+
 - [`app/leads/new/page.tsx`](file://c:\Users\Submarino\Desktop\Nova%20pasta\app\leads\new\page.tsx)
 - [`components/leads/LeadEditForm.tsx`](file://c:\Users\Submarino\Desktop\Nova%20pasta\components\leads\LeadEditForm.tsx)
 
 ## Status
+
 ✅ **RESOLVED** - No StrictMode warnings, production-ready

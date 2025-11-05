@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase-server'
 import { LeadCreateSchema, LeadFilterSchema } from '@/lib/zod-schemas'
 import { NextRequest, NextResponse } from 'next/server'
+import { ZodError } from 'zod'
 
 export async function GET(request: NextRequest) {
   try {
@@ -109,10 +110,10 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(lead, { status: 201 })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error in POST /api/leads:', error)
     
-    if (error.name === 'ZodError') {
+    if (error instanceof ZodError) {
       return NextResponse.json(
         { error: 'Validation error', details: error.errors },
         { status: 400 }
